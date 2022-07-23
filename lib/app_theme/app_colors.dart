@@ -13,7 +13,7 @@ class ToDoColors {
   static const Color blueLight = Color(0xFF007AFF);
   static const Color grayLight = Color(0xFF8E8E93);
   static const Color grayLightLight = Color(0xFFD1D1D6);
-  static const Color whiteLight = Color(0xFFD1D1D6);
+  static const Color whiteLight = Color(0xFFFFFFFF);
   static const Color backPrimaryLight = Color(0xFFF7F6F2);
   static const Color backSecondaryLight = Color(0xFFFFFFFF);
   static const Color backElevatedLight = Color(0xFFFFFFFF);
@@ -30,7 +30,7 @@ class ToDoColors {
   static const Color blueDark = Color(0xFF0A84FF);
   static const Color grayDark = Color(0xFF8E8E93);
   static const Color grayLightDark = Color(0xFF48484A);
-  static const Color whiteDark = Color(0xFFD1D1D6);
+  static const Color whiteDark = Color(0xFFFFFFFF);
   static const Color backPrimaryDark = Color(0xFF161618);
   static const Color backSecondaryDark = Color(0xFF252528);
   static const Color backElevatedDark = Color(0xFF3C3C3F);

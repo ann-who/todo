@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
 
+import '../resources/app_constants.dart';
+
 class ThemeManager {
   // TODO implement dark theme (phase 2)
 
@@ -9,23 +11,27 @@ class ThemeManager {
 
     if (brightness == Brightness.light) {
       themeData = ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: ToDoColors.backPrimaryLight,
         appBarTheme: const AppBarTheme(
           color: ToDoColors.backPrimaryLight,
           iconTheme: IconThemeData(
             color: ToDoColors.blueLight,
           ),
         ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          foregroundColor: ToDoColors.blueLight,
-          backgroundColor: ToDoColors.backPrimaryLight,
-        ),
-        textTheme: const TextTheme(
-          headline1: TextStyle(
-            color: ToDoColors.labelPrimaryLight,
+        cardTheme: CardTheme(
+          color: ToDoColors.backSecondaryLight,
+          elevation: WidgetsSettings.cardElevation,
+          shadowColor: ToDoColors.grayLightLight,
+          margin: const EdgeInsets.all(WidgetsSettings.smallestScreenPadding),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(WidgetsSettings.cardRadius),
           ),
         ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: ToDoColors.blueLight,
+          foregroundColor: ToDoColors.backSecondaryLight,
+        ),
+        iconTheme: const IconThemeData(color: ToDoColors.labelTertiaryLight),
+        scaffoldBackgroundColor: ToDoColors.backPrimaryLight,
       );
     } else {
       themeData = ThemeData();
