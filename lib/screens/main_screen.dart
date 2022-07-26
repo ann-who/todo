@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/resources/app_constants.dart';
-import 'package:todo_app/app_theme/text_theme.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:todo_app/resources/app_icons.dart';
+import 'package:todo_app/screens/task_detailed_screen.dart';
+import 'package:todo_app/widgets/wide_app_bar_widget.dart';
+import 'package:todo_app/widgets/tasks_list_widget.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -11,28 +13,20 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: AppLargeTitle(AppLocalizations.of(context)!.helloWorld)),
-      // body: Padding(
-      //   padding: const EdgeInsets.symmetric(
-      //       horizontal: WidgetsSettings.smallestHorizontalPadding),
-      //   child:
-      body: Card(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) {
-            return const ListTile(
-              leading: AppIcon(path: IconResources.unchecked),
-              title: AppBodyText('do something'),
-              trailing: AppIcon(path: IconResources.infoOutline),
-            );
-          },
-        ),
+      body: const CustomScrollView(
+        slivers: <Widget>[
+          ToDoAppBarWidget(),
+          TasksListWidget(),
+        ],
       ),
-      // ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        // TODO incapsulate navigation
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TaskDetailedScreen()),
+          );
+        },
         child: const AppIcon(
           path: IconResources.add,
           color: ToDoColors.whiteLight,

@@ -1,4 +1,16 @@
 {
-    "helloWorld": "Hello world!",
-    "title": "Make IT!"
+    "appName": "Make IT!",
+    "myToDos": "My ToDos",
+    "done": "Done",
+    "newToDo": "Create new ToDo",
+    "save": "Save",
+    "haveToDo": "What I have to do...",
+    "priority": "Priority",
+    "no": "No",
+    "low": "Low", 
+    "high": "High",
+    "deadline": "Deadline",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "delete": "Delete"
 }
