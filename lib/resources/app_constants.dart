@@ -23,7 +23,14 @@ class WidgetsSettings {
 
   static const double iconRadius = 20.0;
 
+  static const double listTilePadding = 12.0;
+
   static const double titlePadding = 6.0;
+  static const double subtitlePadding = 18.0;
+
+  static const double wideAppBarBiggestPadding = 60.0;
+  static const double wideAppBarMediumPadding = 24.0;
+  static const double wideAppBarSmallPadding = 16.0;
 
   static const int textFieldMinHeight = 5;
 }

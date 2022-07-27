@@ -23,59 +23,67 @@ class _TasksListWidgetState extends State<TasksListWidget> {
       delegate: SliverChildBuilderDelegate(
         childCount: 1,
         (context, index) {
-          return Card(
-            margin: const EdgeInsets.all(WidgetsSettings.smallestScreenPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Dismissible(
-                      key: ValueKey(items[index]),
-                      onDismissed: (DismissDirection direction) {
-                        setState(() {
-                          items.removeAt(index);
-                        });
-                      },
-                      background: Container(
-                        color: brightness == Brightness.light
-                            ? ToDoColors.greenLight
-                            : ToDoColors.greenDark,
-                        alignment: Alignment.centerLeft,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: WidgetsSettings.mediumScreenPadding,
-                          ),
-                          child: AppIcon(
-                            path: IconResources.check,
-                            color: ToDoColors.whiteLight,
-                          ),
-                        ),
-                      ),
-                      secondaryBackground: Container(
-                        color: brightness == Brightness.light
-                            ? ToDoColors.redLight
-                            : ToDoColors.redDark,
-                        alignment: Alignment.centerRight,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: WidgetsSettings.mediumScreenPadding,
-                          ),
-                          child: AppIcon(
-                            path: IconResources.delete,
-                            color: ToDoColors.whiteLight,
+          return Padding(
+            padding: const EdgeInsets.only(
+              top: WidgetsSettings.smallScreenPadding,
+            ),
+            child: Card(
+              margin: const EdgeInsets.all(
+                WidgetsSettings.smallestScreenPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.builder(
+                    padding: const EdgeInsets.all(WidgetsSettings.noPadding),
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Dismissible(
+                        key: ValueKey(items[index]),
+                        onDismissed: (DismissDirection direction) {
+                          setState(() {
+                            items.removeAt(index);
+                          });
+                        },
+                        background: Container(
+                          color: brightness == Brightness.light
+                              ? ToDoColors.greenLight
+                              : ToDoColors.greenDark,
+                          alignment: Alignment.centerLeft,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: WidgetsSettings.mediumScreenPadding,
+                            ),
+                            child: AppIcon(
+                              path: IconResources.check,
+                              color: ToDoColors.whiteLight,
+                            ),
                           ),
                         ),
-                      ),
-                      child: const TaskItemWidget(),
-                    );
-                  },
-                ),
-                const NewTaskListTileButton(),
-              ],
+                        secondaryBackground: Container(
+                          color: brightness == Brightness.light
+                              ? ToDoColors.redLight
+                              : ToDoColors.redDark,
+                          alignment: Alignment.centerRight,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: WidgetsSettings.mediumScreenPadding,
+                            ),
+                            child: AppIcon(
+                              path: IconResources.delete,
+                              color: ToDoColors.whiteLight,
+                            ),
+                          ),
+                        ),
+                        child: const TaskItemWidget(),
+                      );
+                    },
+                  ),
+                  const NewTaskListTileButton(),
+                ],
+              ),
             ),
           );
         },

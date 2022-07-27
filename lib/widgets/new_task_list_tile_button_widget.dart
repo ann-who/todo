@@ -15,12 +15,11 @@ class NewTaskListTileButton extends StatelessWidget {
     return ListTile(
       leading: const AppIcon(
         path: IconResources.add,
+        color: Colors.transparent,
       ),
       title: Text(
         AppLocalizations.of(context)!.newToDo,
-        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              color: ToDoColors.labelTertiaryLight,
-            ),
+        style: Theme.of(context).textTheme.subtitle1,
       ),
       // TODO incapsulate navigation
       onTap: () {
