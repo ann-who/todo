@@ -19,11 +19,15 @@ class WidgetsSettings {
   static const double cardElevation = 4.0;
   static const double cardRadius = 8.0;
 
+  static const double checkBoxRadius = 2.0;
+
   static const double dividerHeight = 0.5;
 
   static const double iconRadius = 20.0;
 
   static const double listTilePadding = 12.0;
+
+  static const double offsetZero = 0.0;
 
   static const double titlePadding = 6.0;
   static const double subtitlePadding = 18.0;
@@ -33,4 +37,5 @@ class WidgetsSettings {
   static const double wideAppBarSmallPadding = 16.0;
 
   static const int textFieldMinHeight = 5;
+  static const double textFieldPadding = 36.0;
 }

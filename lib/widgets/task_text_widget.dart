@@ -23,6 +23,7 @@ class TaskTextWidget extends StatelessWidget {
           maxLines: null,
           minLines: WidgetsSettings.textFieldMinHeight,
           textInputAction: TextInputAction.done,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
       ),
     );

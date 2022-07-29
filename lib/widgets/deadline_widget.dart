@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/resources/app_icons.dart';
 import 'package:todo_app/widgets/app_button.dart';
 import 'package:todo_app/widgets/calendar_widget.dart';
 
@@ -23,17 +21,17 @@ class DeadlineWidget extends StatelessWidget {
             AppLocalizations.of(context)!.deadline,
             style: Theme.of(context).textTheme.bodyText1,
           ),
-          // TODO toggle button
+          // TODO toggle button with custom icon
           AppIconButton(
             () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return CalendarWidget();
+                  return const CalendarWidget();
                 },
               );
             },
-            IconResources.switchOff,
+            Icons.toggle_off_outlined,
           ),
         ],
       ),

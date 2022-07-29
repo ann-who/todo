@@ -7,8 +7,6 @@ import 'package:todo_app/screens/task_detailed_screen.dart';
 import 'package:todo_app/widgets/wide_app_bar_widget.dart';
 import 'package:todo_app/widgets/tasks_list_widget.dart';
 
-import '../resources/app_constants.dart';
-
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
 

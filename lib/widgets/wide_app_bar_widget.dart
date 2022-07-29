@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
 import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/widgets/app_button.dart';
-import 'package:todo_app/resources/app_icons.dart';
 
 class WideAppBarWidget extends StatelessWidget {
   const WideAppBarWidget({Key? key}) : super(key: key);
@@ -39,23 +38,29 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
     return Material(
       child: Stack(
-        fit: StackFit.expand,
+        fit: StackFit.loose,
         children: [
           // Background
           AnimatedContainer(
             color: brightness == Brightness.light
-                ? ToDoColors.backPrimaryLight
-                : Color.lerp(ToDoColors.backPrimaryDark,
-                    ToDoColors.backSecondaryDark, progress),
+                ? Theme.of(context).appBarTheme.backgroundColor
+                : Color.lerp(
+                    Theme.of(context).appBarTheme.backgroundColor,
+                    ToDoColors.backSecondaryDark,
+                    progress,
+                  ),
             duration: const Duration(milliseconds: animationDuration),
           ),
 
           // Animated title and subtitle
           AnimatedContainer(
-            duration: const Duration(milliseconds: animationDuration),
+            duration: const Duration(
+              milliseconds: animationDuration,
+            ),
             padding: EdgeInsets.lerp(
               const EdgeInsets.only(
-                  left: WidgetsSettings.wideAppBarBiggestPadding),
+                left: WidgetsSettings.wideAppBarBiggestPadding,
+              ),
               const EdgeInsets.only(
                 left: WidgetsSettings.wideAppBarSmallPadding,
                 top: WidgetsSettings.wideAppBarMediumPadding,
@@ -74,15 +79,21 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Text(
                   AppLocalizations.of(context)!.myToDos,
                   style: Theme.of(context).textTheme.headline1!.copyWith(
-                        fontSize: lerpDouble(WidgetsSettings.appLargeTitle,
-                            WidgetsSettings.appTitle, progress),
+                        fontSize: lerpDouble(
+                          WidgetsSettings.appLargeTitle,
+                          WidgetsSettings.appTitle,
+                          progress,
+                        ),
                       ),
                 ),
                 AnimatedOpacity(
                   opacity: 1 - progress,
-                  duration: const Duration(milliseconds: animationDuration),
+                  duration: const Duration(
+                    milliseconds: animationDuration,
+                  ),
                   child: Column(
                     children: [
+                      // TODO count done tasks
                       Text(
                         AppLocalizations.of(context)!.done,
                         style: Theme.of(context).textTheme.subtitle1,
@@ -94,21 +105,71 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
 
+          // Animated divider
+          AnimatedContainer(
+            duration: const Duration(
+              milliseconds: animationDuration,
+            ),
+            alignment: Alignment.lerp(
+              Alignment.bottomCenter,
+              Alignment.bottomCenter,
+              progress,
+            ),
+            child: AnimatedOpacity(
+              duration: const Duration(
+                milliseconds: animationDuration,
+              ),
+              opacity: progress / 4,
+              child: Positioned(
+                bottom: 0,
+                child: Container(
+                  height: WidgetsSettings.dividerHeight,
+                  decoration: BoxDecoration(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.separatorLight
+                        : ToDoColors.separatorDark,
+                    boxShadow: [
+                      BoxShadow(
+                        color: brightness == Brightness.light
+                            ? ToDoColors.grayLight
+                            : ToDoColors.grayDark,
+                        spreadRadius: WidgetsSettings.dividerHeight,
+                        blurRadius: 2.0,
+                        blurStyle: BlurStyle.normal,
+                        offset: const Offset(
+                          0,
+                          1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           // Animated icon button
           Positioned(
             // TODO how to calculate position?
-            bottom: lerpDouble(-15, 7, progress),
+            bottom: lerpDouble(
+              -15,
+              7,
+              progress,
+            ),
             right: 0,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: animationDuration),
+              duration: const Duration(
+                milliseconds: animationDuration,
+              ),
               padding: EdgeInsets.lerp(
                 const EdgeInsets.only(
                   right: WidgetsSettings.titlePadding,
                   bottom: WidgetsSettings.noPadding,
                 ),
                 const EdgeInsets.only(
-                    right: WidgetsSettings.noPadding,
-                    top: WidgetsSettings.wideAppBarMediumPadding),
+                  right: WidgetsSettings.noPadding,
+                  top: WidgetsSettings.wideAppBarMediumPadding,
+                ),
                 progress,
               ),
               alignment: Alignment.lerp(
@@ -118,7 +179,8 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
               child: AppIconButton(
                 () {},
-                IconResources.visibility,
+                // IconResources.visibility,
+                Icons.visibility,
               ),
             ),
           ),

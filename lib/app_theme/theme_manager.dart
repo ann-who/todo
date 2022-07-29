@@ -28,6 +28,22 @@ class ThemeManager {
             ),
           ),
         ),
+        checkboxTheme: CheckboxThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              WidgetsSettings.checkBoxRadius,
+            ),
+          ),
+          fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+            if (states.contains(MaterialState.selected)) {
+              return ToDoColors.greenLight;
+            }
+            return ToDoColors.separatorLight;
+          }),
+          checkColor: MaterialStateProperty.all<Color>(
+            ToDoColors.backSecondaryLight,
+          ),
+        ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: ToDoColors.blueLight,
           foregroundColor: ToDoColors.backSecondaryLight,
@@ -83,20 +99,36 @@ class ThemeManager {
     } else {
       themeData = ThemeData(
         appBarTheme: const AppBarTheme(
-          color: ToDoColors.backPrimaryDark,
+          backgroundColor: ToDoColors.backPrimaryDark,
           iconTheme: IconThemeData(
             color: ToDoColors.labelPrimaryDark,
           ),
+          foregroundColor: ToDoColors.labelPrimaryDark,
         ),
         brightness: Brightness.dark,
         cardTheme: CardTheme(
           color: ToDoColors.backSecondaryDark,
-          shadowColor: ToDoColors.grayLightDark,
-          elevation: WidgetsSettings.cardElevation,
+          elevation: WidgetsSettings.noPadding,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               WidgetsSettings.cardRadius,
             ),
+          ),
+        ),
+        checkboxTheme: CheckboxThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              WidgetsSettings.checkBoxRadius,
+            ),
+          ),
+          fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+            if (states.contains(MaterialState.selected)) {
+              return ToDoColors.greenDark;
+            }
+            return ToDoColors.separatorDark;
+          }),
+          checkColor: MaterialStateProperty.all<Color>(
+            ToDoColors.backSecondaryDark,
           ),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -111,7 +143,6 @@ class ThemeManager {
             color: ToDoColors.labelTertiaryDark,
           ),
         ),
-        listTileTheme: ListTileThemeData(tileColor: ToDoColors.greenDark),
         scaffoldBackgroundColor: ToDoColors.backPrimaryDark,
         textTheme: const TextTheme(
           headline1: TextStyle(
@@ -169,8 +200,7 @@ class ThemeManager {
         focusedBorder: InputBorder.none,
       ),
       listTileTheme: const ListTileThemeData(
-        minLeadingWidth: WidgetsSettings.listTilePadding,
-        contentPadding: EdgeInsets.only(left: WidgetsSettings.listTilePadding),
+        contentPadding: EdgeInsets.all(WidgetsSettings.noPadding),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(WidgetsSettings.cardRadius),

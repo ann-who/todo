@@ -53,20 +53,25 @@ class AppPriorityPopupButton extends StatelessWidget {
       AppLocalizations.of(context)!.high,
     ];
     return PopupMenuButton<String>(
-      padding: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      offset: const Offset(
+        WidgetsSettings.smallScreenPadding,
+        WidgetsSettings.offsetZero,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          WidgetsSettings.cardRadius,
+        ),
+      ),
+      splashRadius: WidgetsSettings.buttonSplashRadius,
       // onSelected: onSelected,
       itemBuilder: (_) {
         return values
             .map(
               (priority) => PopupMenuItem(
                 value: priority,
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      priority,
-                    ),
-                  ],
+                child: Text(
+                  priority,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
             )
@@ -98,7 +103,7 @@ class AppPriorityPopupButton extends StatelessWidget {
 
 class AppIconButton extends StatelessWidget {
   final void Function()? onPressed;
-  final String iconPath;
+  final IconData iconPath;
   final Color? color;
 
   const AppIconButton(this.onPressed, this.iconPath, {this.color, Key? key})
@@ -112,13 +117,20 @@ class AppIconButton extends StatelessWidget {
       padding: const EdgeInsets.all(WidgetsSettings.noPadding),
       splashRadius: WidgetsSettings.buttonSplashRadius,
       onPressed: onPressed,
-      icon: AppIcon(
-        path: iconPath,
+      icon: Icon(
+        iconPath,
         color: color ??
             (brightness == Brightness.light
                 ? ToDoColors.blueLight
                 : ToDoColors.blueDark),
       ),
+      // AppIcon(
+      //   path: iconPath,
+      //   color: color ??
+      //       (brightness == Brightness.light
+      //           ? ToDoColors.blueLight
+      //           : ToDoColors.blueDark),
+      // ),
     );
   }
 }
