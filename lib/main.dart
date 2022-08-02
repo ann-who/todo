@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       title: 'Flutter Demo',
       theme: ThemeManager.theme(Brightness.light),
-      // darkTheme: ThemeManager.theme(Brightness.dark),
+      darkTheme: ThemeManager.theme(Brightness.dark),
       home: const MainScreen(),
     );
   }
