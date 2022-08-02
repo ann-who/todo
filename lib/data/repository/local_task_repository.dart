@@ -8,6 +8,11 @@ class LocalTaskRepository implements TaskRepository {
   final ToDoDatabase _toDoDatabase = ToDoDatabase();
 
   @override
+  bool needRefresh() {
+    return false;
+  }
+
+  @override
   Future<void> createTask(Task task) async {
     await _toDoDatabase.taskTable.insertOne(
       TaskTableCompanion.insert(
@@ -79,5 +84,10 @@ class LocalTaskRepository implements TaskRepository {
               lastUpdatedBy: taskEntry.lastUpdatedBy,
             ))
         .get();
+  }
+
+  @override
+  Future<void> updateTasksList(List<Task> tasks) async {
+    throw UnimplementedError();
   }
 }
