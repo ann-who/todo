@@ -1,0 +1,21 @@
+{
+    "appName": "Make IT!",
+    "myToDos": "My ToDos",
+    "done": "Done",
+    "newToDo": "Create new ToDo",
+    "save": "Save",
+    "haveToDo": "What I have to do...",
+    "priority": "Priority",
+    "no": "No",
+    "low": "Low", 
+    "high": "High",
+    "deadline": "Deadline",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "exit": "Exit",
+    "alertSaveTask": "Save the task?",
+    "alreadyDeletedError": "The task has been already deleted",
+    "errorOccured": "An error occured. Try one more time.",
+    "noData": "You don't have any task yet"
+}

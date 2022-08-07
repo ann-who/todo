@@ -1,0 +1,21 @@
+{
+    "appName": "Faire ça!",
+    "myToDos": "Mes tâches",
+    "done": "Réalisée(s)",
+    "newToDo": "Créer nouvelle tâche",
+    "save": "Sauver",
+    "haveToDo": "Qu'est-ce que je dois faire...",
+    "priority": "Priorité",
+    "no": "Il n'y a pas",
+    "low": "Bas", 
+    "high": "Haut",
+    "deadline": "Deadline",
+    "ok": "Ça va",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "exit": "Partir",
+    "alertSaveTask": "Sauve la tâche?",
+    "alreadyDeletedError": "La taĉhe était déjà supprimée",
+    "errorOccured": "Il y a une erreur. Essayez encore une fois.",
+    "noData": "Vous n'avez pas ajouté des tâches"
+}
