@@ -4,8 +4,6 @@ import 'package:todo_app/app_theme/app_colors.dart';
 import '../resources/app_constants.dart';
 
 class ThemeManager {
-  // TODO implement dark theme (phase 2)
-
   static ThemeData theme(Brightness brightness) {
     ThemeData? themeData;
 
@@ -20,19 +18,14 @@ class ThemeManager {
         brightness: Brightness.light,
         cardTheme: CardTheme(
           color: ToDoColors.backSecondaryLight,
-          shadowColor: ToDoColors.grayLightLight,
           elevation: WidgetsSettings.cardElevation,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              WidgetsSettings.cardRadius,
-            ),
+          shape: WidgetsSettings.roundedRectangleBorder(
+            WidgetsSettings.cardRadius,
           ),
         ),
         checkboxTheme: CheckboxThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              WidgetsSettings.checkBoxRadius,
-            ),
+          shape: WidgetsSettings.roundedRectangleBorder(
+            WidgetsSettings.checkBoxRadius,
           ),
           fillColor: MaterialStateProperty.resolveWith<Color>((states) {
             if (states.contains(MaterialState.selected)) {
@@ -43,6 +36,10 @@ class ThemeManager {
           checkColor: MaterialStateProperty.all<Color>(
             ToDoColors.backSecondaryLight,
           ),
+          side: const BorderSide(
+            width: WidgetsSettings.checkBoxRadius,
+            color: ToDoColors.separatorLight,
+          ),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: ToDoColors.blueLight,
@@ -50,11 +47,6 @@ class ThemeManager {
         ),
         iconTheme: const IconThemeData(
           color: ToDoColors.labelTertiaryLight,
-        ),
-        inputDecorationTheme: const InputDecorationTheme(
-          hintStyle: TextStyle(
-            color: ToDoColors.labelTertiaryLight,
-          ),
         ),
         scaffoldBackgroundColor: ToDoColors.backPrimaryLight,
         textTheme: const TextTheme(
@@ -109,17 +101,13 @@ class ThemeManager {
         cardTheme: CardTheme(
           color: ToDoColors.backSecondaryDark,
           elevation: WidgetsSettings.noPadding,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              WidgetsSettings.cardRadius,
-            ),
+          shape: WidgetsSettings.roundedRectangleBorder(
+            WidgetsSettings.cardRadius,
           ),
         ),
         checkboxTheme: CheckboxThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              WidgetsSettings.checkBoxRadius,
-            ),
+          shape: WidgetsSettings.roundedRectangleBorder(
+            WidgetsSettings.checkBoxRadius,
           ),
           fillColor: MaterialStateProperty.resolveWith<Color>((states) {
             if (states.contains(MaterialState.selected)) {
@@ -130,6 +118,10 @@ class ThemeManager {
           checkColor: MaterialStateProperty.all<Color>(
             ToDoColors.backSecondaryDark,
           ),
+          side: const BorderSide(
+            width: WidgetsSettings.checkBoxRadius,
+            color: ToDoColors.separatorDark,
+          ),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: ToDoColors.blueDark,
@@ -137,11 +129,6 @@ class ThemeManager {
         ),
         iconTheme: const IconThemeData(
           color: ToDoColors.labelTertiaryDark,
-        ),
-        inputDecorationTheme: const InputDecorationTheme(
-          hintStyle: TextStyle(
-            color: ToDoColors.labelTertiaryDark,
-          ),
         ),
         scaffoldBackgroundColor: ToDoColors.backPrimaryDark,
         textTheme: const TextTheme(
@@ -200,13 +187,7 @@ class ThemeManager {
         focusedBorder: InputBorder.none,
       ),
       listTileTheme: const ListTileThemeData(
-        contentPadding: EdgeInsets.all(WidgetsSettings.noPadding),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(WidgetsSettings.cardRadius),
-            bottomRight: Radius.circular(WidgetsSettings.cardRadius),
-          ),
-        ),
+        contentPadding: EdgeInsets.zero,
       ),
     );
   }
