@@ -5,7 +5,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../resources/app_constants.dart';
 
 class NewTaskFromListTextField extends StatefulWidget {
-  const NewTaskFromListTextField({Key? key}) : super(key: key);
+  final Future<void> Function(String message) onSubmit;
+
+  const NewTaskFromListTextField({
+    required this.onSubmit,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<NewTaskFromListTextField> createState() =>
@@ -13,6 +18,9 @@ class NewTaskFromListTextField extends StatefulWidget {
 }
 
 class _NewTaskFromListTextFieldState extends State<NewTaskFromListTextField> {
+  TextEditingController controller = TextEditingController();
+  bool _enabled = true;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,13 +28,26 @@ class _NewTaskFromListTextFieldState extends State<NewTaskFromListTextField> {
         horizontal: WidgetsSettings.textFieldPadding,
       ),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context)!.newToDo,
         ),
         style: Theme.of(context).textTheme.bodyText1,
         maxLines: null,
         textInputAction: TextInputAction.done,
-        // autofocus: false,
+        enabled: _enabled,
+        onFieldSubmitted: (value) async {
+          if (value.isNotEmpty) {
+            setState(() {
+              _enabled = false;
+            });
+            await widget.onSubmit(value);
+            controller.clear();
+            setState(() {
+              _enabled = true;
+            });
+          }
+        },
       ),
     );
   }

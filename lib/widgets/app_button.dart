@@ -9,10 +9,14 @@ import '../app_theme/app_colors.dart';
 // TODO change specific colors according to the theme
 
 class AppTextButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
   final String value;
 
-  const AppTextButton(this.onPressed, this.value, {Key? key}) : super(key: key);
+  const AppTextButton({
+    required this.onPressed,
+    required this.value,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,66 +36,86 @@ class AppTextButton extends StatelessWidget {
   }
 }
 
-class AppPriorityPopupButton extends StatelessWidget {
-  // final Function(String)? onSelected;
+class AppPriorityPopupButton extends StatefulWidget {
   final String buttonTitle;
-  final String? selectedPriority;
+  final void Function(String importance) onSelected;
+  String? selectedPriority;
 
-  const AppPriorityPopupButton({
-    // required this.onSelected,
+  AppPriorityPopupButton({
     required this.buttonTitle,
+    required this.onSelected,
     this.selectedPriority,
     Key? key,
   }) : super(key: key);
 
   @override
+  State<AppPriorityPopupButton> createState() => _AppPriorityPopupButtonState();
+}
+
+class _AppPriorityPopupButtonState extends State<AppPriorityPopupButton> {
+  @override
   Widget build(BuildContext context) {
-    String selectedPriority = AppLocalizations.of(context)!.no;
+    Brightness? brightness;
     List<String> values = [
       AppLocalizations.of(context)!.no,
       AppLocalizations.of(context)!.low,
       AppLocalizations.of(context)!.high,
     ];
+
+    widget.selectedPriority ??= AppLocalizations.of(context)!.no;
+
     return PopupMenuButton<String>(
-      offset: const Offset(
-        WidgetsSettings.smallScreenPadding,
-        WidgetsSettings.offsetZero,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          WidgetsSettings.cardRadius,
-        ),
-      ),
+      initialValue: widget.selectedPriority,
+      offset: const Offset(WidgetsSettings.smallScreenPadding, 0),
+      shape: WidgetsSettings.roundedRectangleBorder(WidgetsSettings.cardRadius),
       splashRadius: WidgetsSettings.buttonSplashRadius,
-      // onSelected: onSelected,
-      itemBuilder: (_) {
+      itemBuilder: (context) {
         return values
             .map(
               (priority) => PopupMenuItem(
                 value: priority,
                 child: Text(
-                  priority,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  priority == AppLocalizations.of(context)!.high
+                      ? '!! $priority'
+                      : priority,
+                  style: priority == AppLocalizations.of(context)!.high
+                      ? Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: brightness == Brightness.light
+                                ? ToDoColors.redLight
+                                : ToDoColors.redDark,
+                          )
+                      : Theme.of(context).textTheme.bodyText1,
                 ),
               ),
             )
             .toList();
       },
+      onSelected: (String priority) async {
+        widget.onSelected(priority);
+        setState(() {
+          widget.selectedPriority = priority;
+        });
+      },
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: WidgetsSettings.smallScreenPadding),
+        padding: const EdgeInsets.fromLTRB(
+          WidgetsSettings.smallScreenPadding,
+          WidgetsSettings.noPadding,
+          WidgetsSettings.smallScreenPadding,
+          WidgetsSettings.smallScreenPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              buttonTitle,
-              style: Theme.of(context).textTheme.bodyText1,
+            Padding(
+              padding: const EdgeInsets.only(
+                  bottom: WidgetsSettings.buttonPopUpPadding),
+              child: Text(
+                widget.buttonTitle,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
-            const SizedBox(
-              height: WidgetsSettings.buttonPopUpPadding,
-            ),
             Text(
-              selectedPriority,
+              widget.selectedPriority!,
               style: Theme.of(context).textTheme.caption,
             ),
           ],
@@ -102,76 +126,92 @@ class AppPriorityPopupButton extends StatelessWidget {
 }
 
 class AppIconButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
   final IconData iconPath;
   final Color? color;
 
-  const AppIconButton(this.onPressed, this.iconPath, {this.color, Key? key})
-      : super(key: key);
+  const AppIconButton({
+    required this.onPressed,
+    required this.iconPath,
+    this.color,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Brightness? brightness;
 
-    return IconButton(
-      padding: const EdgeInsets.all(WidgetsSettings.noPadding),
-      splashRadius: WidgetsSettings.buttonSplashRadius,
-      onPressed: onPressed,
-      icon: Icon(
-        iconPath,
-        color: color ??
-            (brightness == Brightness.light
-                ? ToDoColors.blueLight
-                : ToDoColors.blueDark),
+    return InkWell(
+      // child: GestureDetector(
+      // padding: EdgeInsets.zero,
+      radius: WidgetsSettings.buttonSplashRadius,
+      borderRadius: WidgetsSettings.roundedRectangleBorder(8),
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Icon(
+          iconPath,
+          color: color ??
+              (brightness == Brightness.light
+                  ? ToDoColors.blueLight
+                  : ToDoColors.blueDark),
+        ),
       ),
-      // AppIcon(
-      //   path: iconPath,
-      //   color: color ??
-      //       (brightness == Brightness.light
-      //           ? ToDoColors.blueLight
-      //           : ToDoColors.blueDark),
       // ),
     );
   }
 }
 
 class AppTextWithIconButton extends StatelessWidget {
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
   final String value;
   final String iconPath;
+  final Color? color;
 
-  const AppTextWithIconButton(this.onPressed, this.value, this.iconPath,
-      {Key? key})
-      : super(key: key);
+  const AppTextWithIconButton({
+    required this.onPressed,
+    required this.value,
+    required this.iconPath,
+    this.color,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Brightness? brightness;
 
-    return TextButton(
-      onPressed: onPressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppIcon(
-            path: iconPath,
-            color: brightness == Brightness.light
-                ? ToDoColors.redLight
-                : ToDoColors.redDark,
-          ),
-          const SizedBox(
-            width: WidgetsSettings.buttonTextIconPadding,
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.button!.copyWith(
-                  color: brightness == Brightness.light
-                      ? ToDoColors.redLight
-                      : ToDoColors.redDark,
-                ),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: WidgetsSettings.smallScreenPadding,
+      ),
+      child: TextButton(
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  right: WidgetsSettings.buttonTextIconPadding),
+              child: AppIcon(
+                path: iconPath,
+                color: color ??
+                    (brightness == Brightness.light
+                        ? ToDoColors.redLight
+                        : ToDoColors.redDark),
+              ),
+            ),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.button!.copyWith(
+                    color: color ??
+                        (brightness == Brightness.light
+                            ? ToDoColors.redLight
+                            : ToDoColors.redDark),
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
