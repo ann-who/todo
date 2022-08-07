@@ -1,16 +1,33 @@
-# todo_app
+# Done
 
-A new Flutter project.
+* Установлена иконка и название приложения
 
-## Getting Started
+* Добавлен и работает flutter_lints, форматирование кода присутствует
 
-This project is a starting point for a Flutter application.
+* Есть светлая и тёмная темы
 
-A few resources to get you started if this is your first Flutter project:
+* Сделан основной экран со списком всех задач: приоритетность и статут "выполнено/не выполнено" отображаются корректно, текст длинных задач обрезается по макету. Работает счётчик выполненных задач, и, также, их можно скрыть кнопкой в AppBar'e. Отображается дедлайн задачи (если есть). Работает свайп по задаче "Выполнено/Удалить"
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* При нажатии на кнопку "Инфо" есть переход на детальный экран задачи (со всеми её имеющимися настройками). Работает кнопка "Удалить"  (доступна только для существующей задачи)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Доступно создание задачи с главного экрана с настройками по умолчанию
+
+* Доступно создание задачи при нажатии на кнопку "+" на детальном экране с возможностью задать нужные настройки
+
+* Календарь для установки дедлайна реализован с помощью библиотеки table_calendar
+
+* Для дата-моделей используется пакет freezed
+
+* Генерация в/из JSON для класса реализована пакетом json_serializable
+
+* Реализована работа с бэкендом с использованием пакета dio, данные отправляются/получаются с сервера
+
+* Организовано сохранение данных на диск при помощи библиотеки Drift
+
+* Есть интернационализация (используется пакет intl) и добавлены переводы на английский и французский (корректно работают при смене системного языка)
+
+![screenshot_1](https://user-images.githubusercontent.com/67263836/183309848-1c8a2dba-51c1-4712-8f0c-0062e17c202e.jpg)
+![screenshot_2](https://user-images.githubusercontent.com/67263836/183309849-a8e88d44-7eb6-4c76-ac67-fa164be1293a.jpg)
+![screenshot_3](https://user-images.githubusercontent.com/67263836/183309850-5468dcff-61de-4a89-a27a-a1daea50add6.jpg)
+![screenshot_4](https://user-images.githubusercontent.com/67263836/183309852-313becb1-aba3-4d2a-8f88-45aeecc8e674.jpg)
+![screenshot_5](https://user-images.githubusercontent.com/67263836/183309853-12f9c52f-3a25-486f-b70a-6b7719c6d8f6.jpg)
