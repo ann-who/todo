@@ -28,7 +28,7 @@ class _DeadlineWidgetState extends State<DeadlineWidget> {
   @override
   Widget build(BuildContext context) {
     bool showSelectedDate = (widget.deadline != -1);
-    Brightness? brightness; // TODO get brightness
+    Brightness? brightness = MediaQuery.of(context).platformBrightness;
     String? formatted;
     if (showSelectedDate) {
       formatted = formatter.format(

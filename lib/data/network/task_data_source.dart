@@ -18,15 +18,15 @@ class TaskDataSourceAnswer {
 
 class TaskDSException implements Exception {
   String message;
-  TaskDSException([this.message = '']);
+  TaskDSException([this.message = 'Data Source error']);
 }
 
 class RevisionException extends TaskDSException {
-  RevisionException([String message = '']) : super(message);
+  RevisionException([String message = 'Revision error']) : super(message);
 }
 
 class NotFoundException extends TaskDSException {
-  NotFoundException([String message = '']) : super(message);
+  NotFoundException([String message = 'Not found']) : super(message);
 }
 
 class TaskDataSource {

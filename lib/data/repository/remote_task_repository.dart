@@ -2,6 +2,7 @@ import 'package:todo_app/data/network/revision_data_source.dart';
 import 'package:todo_app/data/network/task_data_source.dart';
 import 'package:todo_app/data/network/token_data_source.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
+import 'package:todo_app/main.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
@@ -49,14 +50,14 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = await taskDataSource!.createTask(lastRevision!, task);
     } on RevisionException {
-      print('Ошибка ревизии');
+      logger.e('Revision error');
       // TODO придумать, как разрешать конфликты для offline-first.
       await updateRevision();
       lastRevision = await revisionDataSource.getRevision();
       result = await taskDataSource!.createTask(lastRevision!, task);
       _needRefresh = true;
     } on TaskDSException catch (e) {
-      print(e.message);
+      logger.e(e.message);
       rethrow;
     }
 
@@ -71,10 +72,10 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = await taskDataSource!.getTask(uuid);
     } on NotFoundException {
-      print('Задача $uuid не найдена');
+      logger.e('Задача $uuid не найдена');
       rethrow;
     } on TaskDSException catch (e) {
-      print(e.message);
+      logger.e(e.message);
       rethrow;
     }
 
@@ -91,17 +92,17 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = result = await taskDataSource!.updateTask(lastRevision!, task);
     } on NotFoundException {
-      print('Задача ${task.id} не найдена');
+      logger.e('Задача ${task.id} не найдена');
       rethrow;
     } on RevisionException {
-      print('Ошибка ревизии');
+      logger.e('Ошибка ревизии');
       // TODO придумать, как разрешать конфликты для offline-first.
       await updateRevision();
       lastRevision = await revisionDataSource.getRevision();
       result = await taskDataSource!.updateTask(lastRevision!, task);
       _needRefresh = true;
     } on TaskDSException catch (e) {
-      print(e.message);
+      logger.e(e.message);
       rethrow;
     }
 
@@ -118,16 +119,16 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = await taskDataSource!.deleteTask(lastRevision!, uuid);
     } on NotFoundException {
-      print('Задача $uuid не найдена');
+      logger.e('Задача $uuid не найдена');
       rethrow;
     } on RevisionException {
-      print('Ошибка ревизии');
+      logger.e('Ошибка ревизии');
       await updateRevision();
       lastRevision = await revisionDataSource.getRevision();
       result = await taskDataSource!.deleteTask(lastRevision!, uuid);
       _needRefresh = true;
     } on TaskDSException catch (e) {
-      print(e.message);
+      logger.e(e.message);
       rethrow;
     }
 
@@ -144,7 +145,7 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = await taskDataSource!.getTasksList();
     } on TaskDSException catch (e) {
-      print(e.message);
+      logger.e(e.message);
       rethrow;
     }
 

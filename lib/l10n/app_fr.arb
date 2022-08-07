@@ -12,5 +12,10 @@
     "deadline": "Deadline",
     "ok": "Ça va",
     "cancel": "Annuler",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "exit": "Partir",
+    "alertSaveTask": "Sauve la tâche?",
+    "alreadyDeletedError": "La taĉhe était déjà supprimée",
+    "errorOccured": "Il y a une erreur. Essayez encore une fois.",
+    "noData": "Vous n'avez pas ajouté des tâches"
 }
