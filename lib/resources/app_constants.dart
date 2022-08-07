@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+
 class WidgetsSettings {
+  // Settings for general widgets
   static const double noPadding = 0.0;
   static const double smallestScreenPadding = 8.0;
   static const double smallScreenPadding = 16.0;
@@ -25,9 +28,10 @@ class WidgetsSettings {
 
   static const double iconRadius = 20.0;
 
-  static const double listTilePadding = 12.0;
-
-  static const double offsetZero = 0.0;
+  static const double listTileVerticalPadding = 12.0;
+  static const double listTileHorizontalPadding = 16.0;
+  static const double listTileSmallPadding = 6.0;
+  static const double listTileSmallestPadding = 3.0;
 
   static const double titlePadding = 6.0;
   static const double subtitlePadding = 18.0;
@@ -38,4 +42,17 @@ class WidgetsSettings {
 
   static const int textFieldMinHeight = 5;
   static const double textFieldPadding = 36.0;
+  static const int textTaskMaxHeight = 3;
+
+  static roundedRectangleBorder(double radius) {
+    BorderRadius.circular(
+      radius,
+    );
+  }
+
+  // Settings for data source
+  static const String baseUrl = 'https://beta.mrdekk.ru/todobackend';
+  static const int connectTimeout = 5000;
+  static const int receiveTimeout = 3000;
+  static const String myToken = 'Olnnard';
 }
