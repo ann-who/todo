@@ -8,14 +8,24 @@ import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/widgets/app_button.dart';
 
 class WideAppBarWidget extends StatelessWidget {
-  const WideAppBarWidget({Key? key}) : super(key: key);
+  final ValueNotifier<int> completedCounter;
+  final ValueNotifier<bool> onlyUndoneVisible;
+
+  const WideAppBarWidget({
+    Key? key,
+    required this.completedCounter,
+    required this.onlyUndoneVisible,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverPersistentHeader(
       pinned: true,
       delegate: MyHeaderDelegate(
-        MediaQuery.of(context).size.height / 4,
+        appBarExpandedHeight: MediaQuery.of(context).size.height / 4,
+        statusBarHeight: MediaQuery.of(context).viewPadding.top,
+        completedCounter: completedCounter,
+        onlyUndoneVisible: onlyUndoneVisible,
       ),
     );
   }
@@ -23,8 +33,16 @@ class WideAppBarWidget extends StatelessWidget {
 
 class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double appBarExpandedHeight;
+  final double statusBarHeight;
+  final ValueNotifier<int> completedCounter;
+  final ValueNotifier<bool> onlyUndoneVisible;
 
-  const MyHeaderDelegate(this.appBarExpandedHeight);
+  const MyHeaderDelegate({
+    required this.appBarExpandedHeight,
+    required this.statusBarHeight,
+    required this.completedCounter,
+    required this.onlyUndoneVisible,
+  });
 
   @override
   Widget build(
@@ -91,14 +109,14 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   duration: const Duration(
                     milliseconds: animationDuration,
                   ),
-                  child: Column(
-                    children: [
-                      // TODO count done tasks
-                      Text(
-                        AppLocalizations.of(context)!.done,
+                  child: AnimatedBuilder(
+                    animation: completedCounter,
+                    builder: (BuildContext context, Widget? child) {
+                      return Text(
+                        '${AppLocalizations.of(context)!.done} — ${completedCounter.value}',
                         style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ],
@@ -110,39 +128,32 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             duration: const Duration(
               milliseconds: animationDuration,
             ),
-            alignment: Alignment.lerp(
-              Alignment.bottomCenter,
-              Alignment.bottomCenter,
-              progress,
-            ),
+            alignment: Alignment.bottomCenter,
             child: AnimatedOpacity(
               duration: const Duration(
                 milliseconds: animationDuration,
               ),
               opacity: progress / 4,
-              child: Positioned(
-                bottom: 0,
-                child: Container(
-                  height: WidgetsSettings.dividerHeight,
-                  decoration: BoxDecoration(
-                    color: brightness == Brightness.light
-                        ? ToDoColors.separatorLight
-                        : ToDoColors.separatorDark,
-                    boxShadow: [
-                      BoxShadow(
-                        color: brightness == Brightness.light
-                            ? ToDoColors.grayLight
-                            : ToDoColors.grayDark,
-                        spreadRadius: WidgetsSettings.dividerHeight,
-                        blurRadius: 2.0,
-                        blurStyle: BlurStyle.normal,
-                        offset: const Offset(
-                          0,
-                          1,
-                        ),
+              child: Container(
+                height: WidgetsSettings.dividerHeight,
+                decoration: BoxDecoration(
+                  color: brightness == Brightness.light
+                      ? ToDoColors.separatorLight
+                      : ToDoColors.separatorDark,
+                  boxShadow: [
+                    BoxShadow(
+                      color: brightness == Brightness.light
+                          ? ToDoColors.grayLight
+                          : ToDoColors.grayDark,
+                      spreadRadius: WidgetsSettings.dividerHeight,
+                      blurRadius: 2.0,
+                      blurStyle: BlurStyle.normal,
+                      offset: const Offset(
+                        0,
+                        1,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -150,10 +161,10 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
           // Animated icon button
           Positioned(
-            // TODO how to calculate position?
+            // TODO calculate position
             bottom: lerpDouble(
-              -15,
-              7,
+              -5,
+              12,
               progress,
             ),
             right: 0,
@@ -177,10 +188,18 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Alignment.centerRight,
                 progress,
               ),
-              child: AppIconButton(
-                () {},
-                // IconResources.visibility,
-                Icons.visibility,
+              child: AnimatedBuilder(
+                animation: onlyUndoneVisible,
+                builder: (BuildContext context, Widget? child) {
+                  return AppIconButton(
+                    onPressed: () {
+                      onlyUndoneVisible.value = !onlyUndoneVisible.value;
+                    },
+                    iconPath: onlyUndoneVisible.value
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  );
+                },
               ),
             ),
           ),
@@ -192,13 +211,10 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get maxExtent => appBarExpandedHeight;
 
-  // TODO calculate (how to get appBar standart height?)
   @override
-  double get minExtent => 84;
+  double get minExtent => AppBar().preferredSize.height + statusBarHeight;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       true;
 }
-
-class AnimatedBackground {}
