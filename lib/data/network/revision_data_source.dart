@@ -1,7 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// @dzolotov насколько хорошая идея хранить ревизию в FlutterSecureStorage?
-
 class RevisionDataSource {
   final _storage = const FlutterSecureStorage();
   final _key = 'revision_key';

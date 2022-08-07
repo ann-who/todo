@@ -36,6 +36,27 @@ class Task with _$Task {
     @JsonKey(name: 'last_updated_by') required String lastUpdatedBy,
   }) = _Task;
 
+  factory Task.full({
+    required String text,
+    Importance importance = Importance.basic,
+    int deadline = -1,
+    bool done = false,
+    String? color,
+  }) {
+    var unixTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    return Task(
+      id: const Uuid().v4(),
+      text: text,
+      importance: importance,
+      deadline: deadline,
+      done: done,
+      createdAt: unixTime,
+      changedAt: unixTime,
+      color: color,
+      lastUpdatedBy: 'dev-phone', //! TODO fix uuid
+    );
+  }
+
   factory Task.minimal(String text) {
     var unixTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     return Task(

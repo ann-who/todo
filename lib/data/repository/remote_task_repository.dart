@@ -3,6 +3,7 @@ import 'package:todo_app/data/network/task_data_source.dart';
 import 'package:todo_app/data/network/token_data_source.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/resources/app_constants.dart';
 
 //! TODO обработка ошибок
 // Отсутствие интернета
@@ -16,15 +17,11 @@ class RemoteTaskRepository implements TaskRepository {
   final TokenDataSource tokenDataSource = TokenDataSource();
 
   RemoteTaskRepository() {
-    // @dzolotov как поступить, чтобы не заливать личный ключ в репо?
-    // Может, сделать диалог при первом старте, который спросит личный ключ?
-    tokenDataSource.setToken('Olnnard');
+    tokenDataSource.setToken(WidgetsSettings.myToken);
   }
 
-  Future<void> initDSIfNotInit() async {
-    // @dzolotov тут получилось, что лениво инициализирую источник. Но, может, есть вариант лучше?
-    taskDataSource ??= TaskDataSource((await tokenDataSource.getToken())!);
-  }
+  Future<void> initDSIfNotInit() async =>
+      taskDataSource ??= TaskDataSource((await tokenDataSource.getToken())!);
 
   Future<void> initRevisionIfNotInit() async {
     var lastRevision = await revisionDataSource.getRevision();
@@ -38,15 +35,10 @@ class RemoteTaskRepository implements TaskRepository {
     await initRevisionIfNotInit();
   }
 
-  Future<void> updateRevision() async {
-    // @dzolotov как сделать красиво, чтобы не гонять трафик ради одной ревизии?
-    await getTasksList();
-  }
+  Future<void> updateRevision() async => await getTasksList();
 
   @override
-  bool needRefresh() {
-    return _needRefresh;
-  }
+  bool needRefresh() => _needRefresh;
 
   @override
   Future<void> createTask(Task task) async {
@@ -161,7 +153,6 @@ class RemoteTaskRepository implements TaskRepository {
   }
 
   @override
-  Future<void> updateTasksList(List<Task> tasks) async {
-    throw UnimplementedError();
-  }
+  Future<void> updateTasksList(List<Task> tasks) async =>
+      throw UnimplementedError();
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/resources/app_constants.dart';
 
 //! TODO check internet connection or catch this error
 //! TODO update tasks list
@@ -12,7 +13,7 @@ class TaskDataSourceAnswer {
   int revision;
   Object result;
 
-  TaskDataSourceAnswer(this.revision, this.result);
+  TaskDataSourceAnswer({required this.revision, required this.result});
 }
 
 class TaskDSException implements Exception {
@@ -31,9 +32,9 @@ class NotFoundException extends TaskDSException {
 class TaskDataSource {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://beta.mrdekk.ru/todobackend',
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      baseUrl: WidgetsSettings.baseUrl,
+      connectTimeout: WidgetsSettings.connectTimeout,
+      receiveTimeout: WidgetsSettings.receiveTimeout,
     ),
   );
 
@@ -71,8 +72,8 @@ class TaskDataSource {
 
     var result = response.data;
     return TaskDataSourceAnswer(
-      result['revision'],
-      Task.fromJson(result['element']),
+      revision: result['revision'],
+      result: Task.fromJson(result['element']),
     );
   }
 
@@ -98,8 +99,8 @@ class TaskDataSource {
 
     var result = response.data;
     return TaskDataSourceAnswer(
-      result['revision'],
-      Task.fromJson(result['element']),
+      revision: result['revision'],
+      result: Task.fromJson(result['element']),
     );
   }
 
@@ -136,8 +137,8 @@ class TaskDataSource {
 
     var result = response.data;
     return TaskDataSourceAnswer(
-      result['revision'],
-      Task.fromJson(result['element']),
+      revision: result['revision'],
+      result: Task.fromJson(result['element']),
     );
   }
 
@@ -172,8 +173,8 @@ class TaskDataSource {
 
     var result = response.data;
     return TaskDataSourceAnswer(
-      result['revision'],
-      Task.fromJson(result['element']),
+      revision: result['revision'],
+      result: Task.fromJson(result['element']),
     );
   }
 
@@ -200,8 +201,8 @@ class TaskDataSource {
         .toList();
 
     return TaskDataSourceAnswer(
-      result['revision'],
-      tasksList,
+      revision: result['revision'],
+      result: tasksList,
     );
   }
 }
