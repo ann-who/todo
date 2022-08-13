@@ -44,6 +44,8 @@ class WidgetsSettings {
   static const double textFieldPadding = 36.0;
   static const int textTaskMaxHeight = 3;
 
+  static const int animationDuration = 100;
+
   static roundedRectangleBorder(double radius) {
     BorderRadius.circular(
       radius,

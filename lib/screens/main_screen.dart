@@ -19,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
 
   //! NEEDHELP это костыль, чтобы вызвать обновление, но лучше не придумала
   final ValueNotifier<bool> _updateNotifier = ValueNotifier<bool>(false);
-  final TaskRepository _taskRepository = RemoteTaskRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,6 @@ class _MainScreenState extends State<MainScreen> {
                 onlyUndoneVisible: _onlyUndoneVisible,
               ),
               TasksListWidget(
-                repository: _taskRepository,
                 completedCounter: _completedCounter,
                 onlyUndoneVisible: _onlyUndoneVisible,
                 updateNotifier: _updateNotifier,
@@ -53,7 +51,6 @@ class _MainScreenState extends State<MainScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => TaskDetailedScreen(
-                    taskRepository: _taskRepository,
                     updateNotifier: _updateNotifier,
                   ),
                 ),

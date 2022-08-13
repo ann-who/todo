@@ -51,7 +51,6 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     final progress = shrinkOffset / maxExtent;
-    const int animationDuration = 100;
     Brightness brightness = Theme.of(context).brightness;
 
     return Material(
@@ -67,13 +66,15 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                     ToDoColors.backSecondaryDark,
                     progress,
                   ),
-            duration: const Duration(milliseconds: animationDuration),
+            duration: const Duration(
+              milliseconds: WidgetsSettings.animationDuration,
+            ),
           ),
 
           // Animated title and subtitle
           AnimatedContainer(
             duration: const Duration(
-              milliseconds: animationDuration,
+              milliseconds: WidgetsSettings.animationDuration,
             ),
             padding: EdgeInsets.lerp(
               const EdgeInsets.only(
@@ -107,7 +108,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 AnimatedOpacity(
                   opacity: 1 - progress,
                   duration: const Duration(
-                    milliseconds: animationDuration,
+                    milliseconds: WidgetsSettings.animationDuration,
                   ),
                   child: AnimatedBuilder(
                     animation: completedCounter,
@@ -126,12 +127,12 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
           // Animated divider
           AnimatedContainer(
             duration: const Duration(
-              milliseconds: animationDuration,
+              milliseconds: WidgetsSettings.animationDuration,
             ),
             alignment: Alignment.bottomCenter,
             child: AnimatedOpacity(
               duration: const Duration(
-                milliseconds: animationDuration,
+                milliseconds: WidgetsSettings.animationDuration,
               ),
               opacity: progress / 4,
               child: Container(
@@ -170,7 +171,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             right: 0,
             child: AnimatedContainer(
               duration: const Duration(
-                milliseconds: animationDuration,
+                milliseconds: WidgetsSettings.animationDuration,
               ),
               padding: EdgeInsets.lerp(
                 const EdgeInsets.only(

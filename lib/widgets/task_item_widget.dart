@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/resources/app_icons.dart';
@@ -12,12 +11,9 @@ import 'package:todo_app/widgets/app_button.dart';
 class TaskItemWidget extends StatefulWidget {
   final Task task;
   final Future<void> Function(bool?) onCheck;
-
-  final TaskRepository repository;
   final ValueNotifier<bool> updateNotifier;
 
   const TaskItemWidget({
-    required this.repository,
     required this.updateNotifier,
     required this.onCheck,
     required this.task,
@@ -111,7 +107,6 @@ class TaskTrailingIconButton extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => TaskDetailedScreen(
               task: widget.task,
-              taskRepository: widget.repository,
               updateNotifier: widget.updateNotifier,
             ),
           ),

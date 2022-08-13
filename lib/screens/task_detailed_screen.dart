@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:path/path.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
@@ -15,11 +17,9 @@ import '../models/task_model.dart';
 
 class TaskDetailedScreen extends StatefulWidget {
   final Task? task;
-  final TaskRepository taskRepository;
   final ValueNotifier<bool> updateNotifier;
 
   const TaskDetailedScreen({
-    required this.taskRepository,
     required this.updateNotifier,
     this.task,
     Key? key,
@@ -89,9 +89,9 @@ class _TaskDetailedScreenState extends State<TaskDetailedScreen> {
                 if (textFieldController.text.isNotEmpty) {
                   {
                     if (widget.task == null) {
-                      await createTask();
+                      await createTask(context);
                     } else {
-                      await updateTask();
+                      await updateTask(context);
                     }
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   }
@@ -130,7 +130,7 @@ class _TaskDetailedScreenState extends State<TaskDetailedScreen> {
                 onPressed: widget.task == null
                     ? null
                     : () async {
-                        await deleteTask();
+                        await deleteTask(context);
                         Navigator.of(context)
                             .popUntil((route) => route.isFirst);
                       },
@@ -146,30 +146,30 @@ class _TaskDetailedScreenState extends State<TaskDetailedScreen> {
     );
   }
 
-  Future<void> createTask() async {
+  Future<void> createTask(BuildContext context) async {
     var newTask = Task.full(
       text: textFieldController.text,
       importance: _importance,
       deadline: _deadline,
       done: false,
     );
-    await widget.taskRepository.createTask(newTask);
+    await context.read<TaskRepository>().createTask(newTask);
     widget.updateNotifier.value = !widget.updateNotifier.value;
   }
 
-  Future<void> updateTask() async {
+  Future<void> updateTask(BuildContext context) async {
     var updatedTask = widget.task!.copyWith(
       text: textFieldController.text,
       importance: _importance,
       deadline: _deadline,
       // other parameters
     );
-    await widget.taskRepository.updateTask(updatedTask);
+    await context.read<TaskRepository>().updateTask(updatedTask);
     widget.updateNotifier.value = !widget.updateNotifier.value;
   }
 
-  Future<void> deleteTask() async {
-    await widget.taskRepository.deleteTask(widget.task!.id);
+  Future<void> deleteTask(BuildContext context) async {
+    await context.read<TaskRepository>().deleteTask(widget.task!.id);
     widget.updateNotifier.value = !widget.updateNotifier.value;
   }
 
@@ -185,9 +185,9 @@ class _TaskDetailedScreenState extends State<TaskDetailedScreen> {
             AppTextButton(
               onPressed: () async {
                 if (widget.task == null) {
-                  await createTask();
+                  await createTask(context);
                 } else {
-                  await updateTask();
+                  await updateTask(context);
                 }
 
                 Navigator.of(context).popUntil((route) => route.isFirst);

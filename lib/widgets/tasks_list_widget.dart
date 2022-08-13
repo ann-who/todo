@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:todo_app/app_theme/app_colors.dart';
 import 'package:todo_app/data/network/task_data_source.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
@@ -11,14 +13,12 @@ import 'package:todo_app/widgets/new_task_from_list_text_field_widget.dart';
 import 'package:todo_app/widgets/task_item_widget.dart';
 
 class TasksListWidget extends StatefulWidget {
-  final TaskRepository repository;
   final ValueNotifier<int> completedCounter;
   final ValueNotifier<bool> onlyUndoneVisible;
   final ValueNotifier<bool> updateNotifier;
 
   const TasksListWidget({
     Key? key,
-    required this.repository,
     required this.completedCounter,
     required this.onlyUndoneVisible,
     required this.updateNotifier,
@@ -141,7 +141,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
                                   setState(() {});
                                 },
                                 task: task,
-                                repository: widget.repository,
+                                // repository: widget.repository,
                                 updateNotifier: widget.updateNotifier,
                               ),
                             ),
@@ -170,7 +170,7 @@ class _TasksListWidgetState extends State<TasksListWidget> {
   }
 
   Future<void> updateTasks() async {
-    tasksList = widget.repository.getTasksList();
+    tasksList = context.read<TaskRepository>().getTasksList();
     tasksList!.then((list) {
       int countDone = 0;
       for (var task in list) {
@@ -184,9 +184,9 @@ class _TasksListWidgetState extends State<TasksListWidget> {
   Future<Task?> createTask(String message) async {
     try {
       var newTask = Task.minimal(message);
-      await widget.repository.createTask(newTask);
+      await context.read<TaskRepository>().createTask(newTask);
 
-      if (widget.repository.needRefresh()) {
+      if (context.read<TaskRepository>().needRefresh()) {
         updateTasks();
       }
 
@@ -201,11 +201,11 @@ class _TasksListWidgetState extends State<TasksListWidget> {
   Future<Task?> toggleTask(Task task) async {
     try {
       var updatedTask = task.copyWith(done: !task.done);
-      await widget.repository.updateTask(updatedTask);
+      await context.read<TaskRepository>().updateTask(updatedTask);
 
       widget.completedCounter.value += updatedTask.done ? 1 : -1;
 
-      if (widget.repository.needRefresh()) {
+      if (context.read<TaskRepository>().needRefresh()) {
         updateTasks();
       }
 
@@ -221,11 +221,11 @@ class _TasksListWidgetState extends State<TasksListWidget> {
 
   Future<void> deleteTask(Task task) async {
     try {
-      await widget.repository.deleteTask(task.id);
+      await context.read<TaskRepository>().deleteTask(task.id);
       if (task.done) {
         --widget.completedCounter.value;
       }
-      if (widget.repository.needRefresh()) {
+      if (context.read<TaskRepository>().needRefresh()) {
         updateTasks();
       }
     } on NotFoundException {
