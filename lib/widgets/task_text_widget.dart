@@ -1,25 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:todo_app/models/task_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
+import 'package:todo_app/resources/app_constants.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_event.dart';
 
-import '../resources/app_constants.dart';
-
-class TaskTextWidget extends StatefulWidget {
-  final Task? task;
-  final TextEditingController controller;
-
+class TaskTextWidget extends StatelessWidget {
   const TaskTextWidget({
-    required this.task,
-    required this.controller,
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<TaskTextWidget> createState() => _TaskTextWidgetState();
-}
-
-class _TaskTextWidgetState extends State<TaskTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,7 +22,7 @@ class _TaskTextWidgetState extends State<TaskTextWidget> {
       ),
       child: Card(
         child: TextFormField(
-          controller: widget.controller,
+          initialValue: context.read<TaskDetailedScreenBloc>().state.taskText,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.haveToDo,
           ),
@@ -39,6 +30,9 @@ class _TaskTextWidgetState extends State<TaskTextWidget> {
           minLines: WidgetsSettings.textFieldMinHeight,
           textInputAction: TextInputAction.done,
           style: Theme.of(context).textTheme.bodyText1,
+          onChanged: (value) => context
+              .read<TaskDetailedScreenBloc>()
+              .add(TaskTextChanged(value)),
         ),
       ),
     );

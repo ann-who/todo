@@ -1,38 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_event.dart';
 import 'package:todo_app/widgets/task_deadline_calendar.dart';
 
 import '../resources/app_constants.dart';
 
-class DeadlineWidget extends StatefulWidget {
-  int deadline;
-  final void Function(int deadline) onSelected;
-
-  DeadlineWidget({
-    required this.deadline,
-    required this.onSelected,
+class DeadlineWidget extends StatelessWidget {
+  const DeadlineWidget({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DeadlineWidget> createState() => _DeadlineWidgetState();
-}
-
-class _DeadlineWidgetState extends State<DeadlineWidget> {
-  final DateFormat formatter =
-      DateFormat.yMMMMd('ru'); // TODO get system locale
-
-  @override
   Widget build(BuildContext context) {
-    bool showSelectedDate = (widget.deadline != -1);
+    bool showSelectedDate =
+        context.watch<TaskDetailedScreenBloc>().state.hasDeadline;
+
     Brightness? brightness = MediaQuery.of(context).platformBrightness;
+    // TODO get system locale
+    final DateFormat formatter = DateFormat.yMMMMd('ru');
     String? formatted;
+
     if (showSelectedDate) {
+      var currentDeadline =
+          context.watch<TaskDetailedScreenBloc>().state.deadline;
       formatted = formatter.format(
-        DateTime.fromMillisecondsSinceEpoch(widget.deadline * 1000),
+        DateTime.fromMillisecondsSinceEpoch(currentDeadline * 1000),
       );
     }
 
@@ -46,13 +43,13 @@ class _DeadlineWidgetState extends State<DeadlineWidget> {
         value: showSelectedDate,
         onChanged: (bool newState) async {
           if (newState == false) {
-            setState(() {
-              widget.deadline = -1;
-            });
+            context
+                .read<TaskDetailedScreenBloc>()
+                .add(const TaskDeadlineChanged());
             return;
           }
 
-          var deadline = await showDialog(
+          int? deadline = await showDialog(
             context: context,
             builder: (context) => AlertDialog(
               content: SizedBox(
@@ -67,11 +64,12 @@ class _DeadlineWidgetState extends State<DeadlineWidget> {
               backgroundColor: ToDoColors.backSecondaryLight,
             ),
           );
-          if (deadline != null && deadline != widget.deadline) {
-            setState(() {
-              widget.deadline = deadline;
-              widget.onSelected(deadline);
-            });
+          var currentDeadline =
+              context.read<TaskDetailedScreenBloc>().state.deadline;
+          if (deadline != null && deadline != currentDeadline) {
+            context
+                .read<TaskDetailedScreenBloc>()
+                .add(TaskDeadlineChanged(deadline));
           }
         },
         title: Text(

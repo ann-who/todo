@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_event.dart';
+import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_state.dart';
 
 import '../resources/app_icons.dart';
 import '../app_theme/app_colors.dart';
@@ -36,23 +41,11 @@ class AppTextButton extends StatelessWidget {
   }
 }
 
-class AppPriorityPopupButton extends StatefulWidget {
-  final String buttonTitle;
-  final void Function(String importance) onSelected;
-  String? selectedPriority;
-
-  AppPriorityPopupButton({
-    required this.buttonTitle,
-    required this.onSelected,
-    this.selectedPriority,
+class AppPriorityPopupButton extends StatelessWidget {
+  const AppPriorityPopupButton({
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<AppPriorityPopupButton> createState() => _AppPriorityPopupButtonState();
-}
-
-class _AppPriorityPopupButtonState extends State<AppPriorityPopupButton> {
   @override
   Widget build(BuildContext context) {
     Brightness? brightness;
@@ -62,10 +55,20 @@ class _AppPriorityPopupButtonState extends State<AppPriorityPopupButton> {
       AppLocalizations.of(context)!.high,
     ];
 
-    widget.selectedPriority ??= AppLocalizations.of(context)!.no;
+    var importanceToString = {
+      Importance.basic: AppLocalizations.of(context)!.no,
+      Importance.low: AppLocalizations.of(context)!.low,
+      Importance.important: AppLocalizations.of(context)!.high,
+    };
+    var stringToImportance = {
+      AppLocalizations.of(context)!.no: Importance.basic,
+      AppLocalizations.of(context)!.low: Importance.low,
+      AppLocalizations.of(context)!.high: Importance.important,
+    };
 
     return PopupMenuButton<String>(
-      initialValue: widget.selectedPriority,
+      initialValue: importanceToString[
+          context.read<TaskDetailedScreenBloc>().state.importance],
       offset: const Offset(WidgetsSettings.smallScreenPadding, 0),
       shape: WidgetsSettings.roundedRectangleBorder(WidgetsSettings.cardRadius),
       splashRadius: WidgetsSettings.buttonSplashRadius,
@@ -90,11 +93,10 @@ class _AppPriorityPopupButtonState extends State<AppPriorityPopupButton> {
             )
             .toList();
       },
-      onSelected: (String priority) async {
-        widget.onSelected(priority);
-        setState(() {
-          widget.selectedPriority = priority;
-        });
+      onSelected: (String importance) async {
+        context
+            .read<TaskDetailedScreenBloc>()
+            .add(TaskImportanceChanged(stringToImportance[importance]!));
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -110,13 +112,17 @@ class _AppPriorityPopupButtonState extends State<AppPriorityPopupButton> {
               padding: const EdgeInsets.only(
                   bottom: WidgetsSettings.buttonPopUpPadding),
               child: Text(
-                widget.buttonTitle,
+                AppLocalizations.of(context)!.priority,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
-            Text(
-              widget.selectedPriority!,
-              style: Theme.of(context).textTheme.caption,
+            BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+              builder: (context, state) {
+                return Text(
+                  importanceToString[state.importance]!,
+                  style: Theme.of(context).textTheme.caption,
+                );
+              },
             ),
           ],
         ),

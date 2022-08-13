@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_app/app_theme/theme_manager.dart';
 import 'package:todo_app/data/repository/remote_task_repository.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
-import 'package:todo_app/screens/main_screen.dart';
-import 'package:todo_app/screens/task_detailed_screen.dart';
+import 'package:todo_app/screens/main_screen/main_screen.dart';
+import 'package:todo_app/screens/task_detailed_screen/task_detailed_screen.dart';
 
 void main() {
   runApp(

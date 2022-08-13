@@ -4,7 +4,7 @@ import 'package:todo_app/app_theme/app_colors.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/resources/app_icons.dart';
-import 'package:todo_app/screens/task_detailed_screen.dart';
+import 'package:todo_app/screens/task_detailed_screen/task_detailed_screen.dart';
 
 import 'package:todo_app/widgets/app_button.dart';
 
@@ -101,16 +101,18 @@ class TaskTrailingIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppIconButton(
-      onPressed: () {
-        Navigator.push(
+      onPressed: () async {
+        bool? needUpdate = await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => TaskDetailedScreen(
-              task: widget.task,
-              updateNotifier: widget.updateNotifier,
+              initialTask: widget.task,
             ),
           ),
         );
+        if (needUpdate == true) {
+          widget.updateNotifier.value = !widget.updateNotifier.value;
+        }
       },
       iconPath: Icons.info_outline,
       color: Theme.of(context).iconTheme.color,

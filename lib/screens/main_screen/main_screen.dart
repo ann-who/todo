@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/data/repository/remote_task_repository.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
 
-import 'package:todo_app/screens/task_detailed_screen.dart';
+import 'package:todo_app/screens/task_detailed_screen/task_detailed_screen.dart';
 import 'package:todo_app/widgets/wide_app_bar_widget.dart';
 import 'package:todo_app/widgets/tasks_list_widget.dart';
 
@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () => Future.value(false),
       child: RefreshIndicator(
         onRefresh: () {
           _updateNotifier.value = !_updateNotifier.value;
@@ -46,15 +46,16 @@ class _MainScreenState extends State<MainScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             // TODO incapsulate navigation
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              bool? needUpdate = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TaskDetailedScreen(
-                    updateNotifier: _updateNotifier,
-                  ),
+                  builder: (context) => const TaskDetailedScreen(),
                 ),
               );
+              if (needUpdate == true) {
+                _updateNotifier.value = !_updateNotifier.value;
+              }
             },
             child: const Icon(Icons.add),
           ),
