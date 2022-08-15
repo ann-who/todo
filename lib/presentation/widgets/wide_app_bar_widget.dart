@@ -4,17 +4,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
+import 'package:todo_app/presentation/widgets/app_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
-import 'package:todo_app/widgets/app_button.dart';
 
 class WideAppBarWidget extends StatelessWidget {
-  final ValueNotifier<int> completedCounter;
-  final ValueNotifier<bool> onlyUndoneVisible;
-
   const WideAppBarWidget({
     Key? key,
-    required this.completedCounter,
-    required this.onlyUndoneVisible,
   }) : super(key: key);
 
   @override
@@ -24,8 +19,6 @@ class WideAppBarWidget extends StatelessWidget {
       delegate: MyHeaderDelegate(
         appBarExpandedHeight: MediaQuery.of(context).size.height / 4,
         statusBarHeight: MediaQuery.of(context).viewPadding.top,
-        completedCounter: completedCounter,
-        onlyUndoneVisible: onlyUndoneVisible,
       ),
     );
   }
@@ -34,14 +27,10 @@ class WideAppBarWidget extends StatelessWidget {
 class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double appBarExpandedHeight;
   final double statusBarHeight;
-  final ValueNotifier<int> completedCounter;
-  final ValueNotifier<bool> onlyUndoneVisible;
 
   const MyHeaderDelegate({
     required this.appBarExpandedHeight,
     required this.statusBarHeight,
-    required this.completedCounter,
-    required this.onlyUndoneVisible,
   });
 
   @override
@@ -110,15 +99,17 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   duration: const Duration(
                     milliseconds: WidgetsSettings.animationDuration,
                   ),
-                  child: AnimatedBuilder(
-                    animation: completedCounter,
-                    builder: (BuildContext context, Widget? child) {
-                      return Text(
-                        '${AppLocalizations.of(context)!.done} — ${completedCounter.value}',
-                        style: Theme.of(context).textTheme.subtitle1,
-                      );
-                    },
+                  child:
+                      // AnimatedBuilder(
+                      // animation: completedCounter,
+                      // builder: (BuildContext context, Widget? child) {
+                      // return
+                      Text(
+                    '${AppLocalizations.of(context)!.done} — сделать счётчик',
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
+                  // },
+                  //   ),
                 ),
               ],
             ),
@@ -189,19 +180,23 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Alignment.centerRight,
                 progress,
               ),
-              child: AnimatedBuilder(
-                animation: onlyUndoneVisible,
-                builder: (BuildContext context, Widget? child) {
-                  return AppIconButton(
-                    onPressed: () {
-                      onlyUndoneVisible.value = !onlyUndoneVisible.value;
-                    },
-                    iconPath: onlyUndoneVisible.value
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  );
-                },
-              ),
+              child:
+                  // AnimatedBuilder(
+                  //   animation: onlyUndoneVisible,
+                  //   builder: (BuildContext context, Widget? child) {
+                  //     return
+                  AppIconButton(
+                      onPressed: () {
+                        // TODO add toggle action
+                      },
+                      iconPath:
+                          // onlyUndoneVisible.value
+                          // ?
+                          Icons.visibility_off
+                      // : Icons.visibility,
+                      ),
+              //   },
+              // ),
             ),
           ),
         ],

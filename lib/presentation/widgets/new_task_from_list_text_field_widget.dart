@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../resources/app_constants.dart';
+import 'package:todo_app/resources/app_constants.dart';
 
 class NewTaskFromListTextField extends StatefulWidget {
   final Future<void> Function(String message) onSubmit;

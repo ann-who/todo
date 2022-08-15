@@ -7,10 +7,10 @@ import 'package:todo_app/app_theme/app_colors.dart';
 import 'package:todo_app/data/network/task_data_source.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/presentation/widgets/new_task_from_list_text_field_widget.dart';
+import 'package:todo_app/presentation/widgets/task_item_widget.dart';
 import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/resources/app_icons.dart';
-import 'package:todo_app/widgets/new_task_from_list_text_field_widget.dart';
-import 'package:todo_app/widgets/task_item_widget.dart';
 
 class TasksListWidget extends StatefulWidget {
   final ValueNotifier<int> completedCounter;

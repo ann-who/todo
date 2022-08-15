@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
+
 import 'package:todo_app/app_theme/app_colors.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/task_detailed_screen.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/presentation/widgets/app_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
 import 'package:todo_app/resources/app_icons.dart';
-import 'package:todo_app/screens/task_detailed_screen/task_detailed_screen.dart';
-
-import 'package:todo_app/widgets/app_button.dart';
 
 class TaskItemWidget extends StatefulWidget {
   final Task task;

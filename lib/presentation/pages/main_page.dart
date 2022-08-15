@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:todo_app/business_logic/main_screen/bloc/main_screen_bloc.dart';
+import 'package:todo_app/business_logic/main_screen/bloc/main_screen_event.dart';
+import 'package:todo_app/business_logic/main_screen/bloc/main_screen_state.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/task_detailed_screen.dart';
+import 'package:todo_app/presentation/widgets/wide_app_bar_widget.dart';
+import 'package:todo_app/presentation/widgets/tasks_list_widget.dart';
+
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TasksMainScreenBloc, TasksMainScreenState>(
+      listener: (context, state) async {
+        if (state.status == TasksMainScreenStatus.ordinary) {
+          Navigator.of(context).pop(false);
+        } else if (state.status == TasksMainScreenStatus.failure) {
+          await showDialog(
+            context: context,
+            builder: ((context) {
+              String errorMessage;
+              if (state.errorStatus == TasksMainScreenError.onCreateError) {
+                errorMessage = 'Ошибочка...';
+              } else if (state.errorStatus ==
+                  TasksMainScreenError.onDeleteError) {
+                errorMessage = 'Ошибочка...';
+              } else if (state.errorStatus ==
+                  TasksMainScreenError.onUpdateError) {
+                errorMessage = 'Ошибочка...';
+              } else if (state.errorStatus ==
+                  TasksMainScreenError.onRefreshError) {
+                errorMessage = 'Ошибочка...';
+              } else {
+                errorMessage = 'Странная ошибочка...';
+              }
+              return AlertDialog(
+                content: Text(errorMessage),
+              );
+            }),
+          );
+          Navigator.of(context).pop(false);
+        }
+      },
+      child: WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: RefreshIndicator(
+          onRefresh: () {
+            context.read<TasksMainScreenBloc>().add(const TasksListRefreshed());
+            return Future.value();
+          },
+          child: Scaffold(
+            body: const CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: <Widget>[
+                WideAppBarWidget(),
+                // TasksListWidget(),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              // TODO incapsulate navigation
+              onPressed: () async {
+                bool? needUpdate = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TaskDetailedScreen(),
+                  ),
+                );
+                if (needUpdate == true) {
+                  context
+                      .read<TasksMainScreenBloc>()
+                      .add(const TasksListRefreshed());
+                }
+              },
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

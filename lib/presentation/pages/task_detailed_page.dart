@@ -4,37 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/data/repository/task_repository.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_event.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_state.dart';
 import 'package:todo_app/resources/app_constants.dart';
-import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
-import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_event.dart';
-import 'package:todo_app/screens/task_detailed_screen/bloc/task_detailed_screen_state.dart';
-import 'package:todo_app/widgets/app_button.dart';
 import 'package:todo_app/resources/app_icons.dart';
-import 'package:todo_app/widgets/app_divider.dart';
-import 'package:todo_app/widgets/deadline_widget.dart';
-import 'package:todo_app/widgets/task_text_widget.dart';
-import 'package:todo_app/models/task_model.dart';
-
-class TaskDetailedScreen extends StatelessWidget {
-  final Task? initialTask;
-
-  const TaskDetailedScreen({
-    this.initialTask,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TaskDetailedScreenBloc(
-        taskRepository: context.read<TaskRepository>(),
-        initialTask: initialTask,
-      ),
-      child: const TaskDetailedPage(),
-    );
-  }
-}
+import 'package:todo_app/presentation/widgets/app_button.dart';
+import 'package:todo_app/presentation/widgets/app_divider.dart';
+import 'package:todo_app/presentation/widgets/deadline_widget.dart';
+import 'package:todo_app/presentation/widgets/priority_button.dart';
+import 'package:todo_app/presentation/widgets/task_text_widget.dart';
 
 class TaskDetailedPage extends StatelessWidget {
   const TaskDetailedPage({Key? key}) : super(key: key);
