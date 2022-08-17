@@ -26,6 +26,7 @@ class TaskPriorityIcon extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(
         top: WidgetsSettings.listTileSmallestPadding,
+        right: WidgetsSettings.listTileSmallestPadding,
       ),
       child: importance == Importance.basic
           ? Container()

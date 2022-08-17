@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo_app/app_theme/app_colors.dart';
 
 import 'package:todo_app/business_logic/task_detailed_screen/bloc_for_task_detailed_screen.dart';
 import 'package:todo_app/presentation/widgets/buttons/app_icon_button.dart';
@@ -88,7 +89,8 @@ class TaskDetailedPage extends StatelessWidget {
             actions: [
               BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
                 builder: (context, state) {
-                  // TODO gray
+                  Brightness? brightness =
+                      MediaQuery.of(context).platformBrightness;
                   return AppTextButton(
                     value: AppLocalizations.of(context)!.save,
                     onPressed: !state.isChanged ||
@@ -100,6 +102,13 @@ class TaskDetailedPage extends StatelessWidget {
                                 .read<TaskDetailedScreenBloc>()
                                 .add(const TaskSubmitted());
                           },
+                    color: (!state.isChanged ||
+                            state.status.isLoadingOrSuccess ||
+                            state.taskText.isEmpty)
+                        ? (brightness == Brightness.light)
+                            ? ToDoColors.labelDisableLight
+                            : ToDoColors.labelDisableDark
+                        : null,
                   );
                 },
               ),

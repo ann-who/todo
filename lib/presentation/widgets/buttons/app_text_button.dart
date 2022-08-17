@@ -7,10 +7,12 @@ import 'package:todo_app/business_logic/task_detailed_screen/bloc_for_task_detai
 class AppTextButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String value;
+  final Color? color;
 
   const AppTextButton({
     required this.onPressed,
     required this.value,
+    this.color,
     Key? key,
   }) : super(key: key);
 
@@ -20,9 +22,6 @@ class AppTextButton extends StatelessWidget {
     var enabledColor = (brightness == Brightness.light)
         ? ToDoColors.blueLight
         : ToDoColors.blueDark;
-    var disabledColor = (brightness == Brightness.light)
-        ? ToDoColors.labelDisableLight
-        : ToDoColors.labelDisableDark;
 
     return BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
       builder: (context, state) {
@@ -31,11 +30,7 @@ class AppTextButton extends StatelessWidget {
           child: Text(
             value.toUpperCase(),
             style: Theme.of(context).textTheme.button!.copyWith(
-                  color: !state.isChanged ||
-                          state.status.isLoadingOrSuccess ||
-                          state.taskText.isEmpty
-                      ? disabledColor
-                      : enabledColor,
+                  color: color ?? enabledColor,
                 ),
           ),
         );

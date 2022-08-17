@@ -30,123 +30,136 @@ class _TableBasicsExampleState extends State<TaskDeadlineCalendar> {
     Brightness? brightness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 8,
-            width: double.infinity,
-            child: Container(
-              color: brightness == Brightness.light
-                  ? ToDoColors.blueLight
-                  : ToDoColors.blueDark,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: WidgetsSettings.wideAppBarMediumPadding,
-                  vertical: WidgetsSettings.wideAppBarSmallPadding,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${_focusedDay.year}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(color: ToDoColors.whiteLight),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          // TODO calculate height
+          height: double.maxFinite,
+          child: Column(
+            children: [
+              SizedBox(
+                // TODO пользоваться MediaQuery.of(context) здесь сильно плохо?
+                height:
+                    (MediaQuery.of(context).orientation == Orientation.portrait)
+                        ? MediaQuery.of(context).size.height / 8
+                        : MediaQuery.of(context).size.height / 4,
+                width: double.infinity,
+                child: Container(
+                  color: brightness == Brightness.light
+                      ? ToDoColors.blueLight
+                      : ToDoColors.blueDark,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: WidgetsSettings.wideAppBarMediumPadding,
+                      vertical: WidgetsSettings.wideAppBarSmallPadding,
                     ),
-                    Text(
-                      '${formattedWeekday.format(_focusedDay)}, ${formattedMonth.format(_focusedDay)} ${_focusedDay.day} ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1!
-                          .copyWith(color: ToDoColors.whiteLight),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${_focusedDay.year}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(color: ToDoColors.whiteLight),
+                        ),
+                        Text(
+                          '${formattedWeekday.format(_focusedDay)}, ${formattedMonth.format(_focusedDay)} ${_focusedDay.day} ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1!
+                              .copyWith(color: ToDoColors.whiteLight),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          TableCalendar(
-            // TODO get system locale
-            locale: 'ru',
-            firstDay: DateTime.now(),
-            lastDay: DateTime(2049),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            headerStyle: HeaderStyle(
-              titleCentered: true,
-              titleTextStyle: Theme.of(context).textTheme.button!.copyWith(
-                    color: brightness == Brightness.light
-                        ? ToDoColors.labelPrimaryLight
-                        : ToDoColors.labelPrimaryDark,
                   ),
-            ),
-            daysOfWeekStyle: const DaysOfWeekStyle(
-              weekdayStyle: TextStyle(
-                color: ToDoColors.labelTertiaryLight,
+                ),
               ),
-              weekendStyle: TextStyle(
-                color: ToDoColors.labelTertiaryLight,
-              ),
-            ),
+              TableCalendar(
+                // TODO get system locale
+                locale: 'ru',
+                firstDay: DateTime.now(),
+                lastDay: DateTime(2049),
+                focusedDay: _focusedDay,
+                calendarFormat: _calendarFormat,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  titleTextStyle: Theme.of(context).textTheme.button!.copyWith(
+                        color: brightness == Brightness.light
+                            ? ToDoColors.labelPrimaryLight
+                            : ToDoColors.labelPrimaryDark,
+                      ),
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.labelTertiaryLight
+                        : ToDoColors.labelTertiaryDark,
+                  ),
+                  weekendStyle: TextStyle(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.labelTertiaryLight
+                        : ToDoColors.labelTertiaryDark,
+                  ),
+                ),
+                availableGestures: AvailableGestures.horizontalSwipe,
 
-            calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
-              todayDecoration: BoxDecoration(
-                color: brightness == Brightness.light
-                    ? ToDoColors.blueLight.withOpacity(0.3)
-                    : ToDoColors.blueDark.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: brightness == Brightness.light
-                    ? ToDoColors.blueLight
-                    : ToDoColors.blueDark,
-                shape: BoxShape.circle,
-              ),
-            ),
-            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = selectedDay;
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  todayDecoration: BoxDecoration(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.blueLight.withOpacity(0.3)
+                        : ToDoColors.blueDark.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.blueLight
+                        : ToDoColors.blueDark,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  if (!isSameDay(_selectedDay, selectedDay)) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  AppTextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    value: AppLocalizations.of(context)!.cancel,
+                  ),
+                  AppTextButton(
+                    onPressed: () {
+                      _selectedDay != null
+                          ? Navigator.of(context)
+                              .pop(_selectedDay!.millisecondsSinceEpoch ~/ 1000)
+                          : Navigator.of(context).pop();
+                    },
+                    value: AppLocalizations.of(context)!.ok,
+                  ),
+                ],
+              ),
+            ],
           ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                AppTextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  value: AppLocalizations.of(context)!.cancel,
-                ),
-                AppTextButton(
-                  onPressed: () {
-                    _selectedDay != null
-                        ? Navigator.of(context)
-                            .pop(_selectedDay!.millisecondsSinceEpoch ~/ 1000)
-                        : Navigator.of(context).pop();
-                  },
-                  value: AppLocalizations.of(context)!.ok,
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
