@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/presentation/widgets/app_button.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_text_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
 class TaskDeadlineCalendar extends StatefulWidget {

@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_event.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_state.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/bloc_for_task_detailed_screen.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_icon_button.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_text_button.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_text_with_icon_button.dart';
+import 'package:todo_app/presentation/widgets/buttons/priority_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
-import 'package:todo_app/resources/app_icons.dart';
-import 'package:todo_app/presentation/widgets/app_button.dart';
 import 'package:todo_app/presentation/widgets/app_divider.dart';
 import 'package:todo_app/presentation/widgets/deadline_widget.dart';
-import 'package:todo_app/presentation/widgets/priority_button.dart';
 import 'package:todo_app/presentation/widgets/task_text_widget.dart';
 
 class TaskDetailedPage extends StatelessWidget {
@@ -28,6 +26,7 @@ class TaskDetailedPage extends StatelessWidget {
           await showDialog(
             context: context,
             builder: ((context) {
+              // TODO handle errors
               String errorMessage;
               if (state.errorStatus == TaskDetailedScreenError.onCreateError) {
                 errorMessage = 'Ошибочка...';
@@ -109,29 +108,13 @@ class TaskDetailedPage extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const TaskTextWidget(),
-                const AppPriorityPopupButton(),
-                const AppDivider(padding: WidgetsSettings.smallScreenPadding),
-                const DeadlineWidget(),
-                const AppDivider(),
-                BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
-                  builder: (context, state) {
-                    return AppTextWithIconButton(
-                      onPressed:
-                          state.isNewTask || state.status.isLoadingOrSuccess
-                              ? null
-                              : () => context
-                                  .read<TaskDetailedScreenBloc>()
-                                  .add(const TaskDeleted()),
-                      value: AppLocalizations.of(context)!.delete,
-                      iconPath: IconResources.delete,
-                      color: state.isNewTask || state.status.isLoadingOrSuccess
-                          ? ToDoColors.labelDisableLight
-                          : null,
-                    );
-                  },
-                ),
+              children: const [
+                TaskTextWidget(),
+                AppPriorityPopupButton(),
+                AppDivider(padding: WidgetsSettings.smallScreenPadding),
+                DeadlineWidget(),
+                AppDivider(),
+                AppTextWithIconButton(),
               ],
             ),
           ),

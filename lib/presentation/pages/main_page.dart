@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_app/business_logic/main_screen/bloc/main_screen_bloc.dart';
-import 'package:todo_app/business_logic/main_screen/bloc/main_screen_event.dart';
-import 'package:todo_app/business_logic/main_screen/bloc/main_screen_state.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/task_detailed_screen.dart';
+import 'package:todo_app/business_logic/main_screen/bloc_for_main_screen.dart';
+import 'package:todo_app/presentation/pages/task_detailed_screen.dart';
+import 'package:todo_app/presentation/widgets/tasks_list/tasks_list_widget.dart';
 import 'package:todo_app/presentation/widgets/wide_app_bar_widget.dart';
-import 'package:todo_app/presentation/widgets/tasks_list_widget.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,33 +14,34 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<TasksMainScreenBloc, TasksMainScreenState>(
       listener: (context, state) async {
-        if (state.status == TasksMainScreenStatus.ordinary) {
-          Navigator.of(context).pop(false);
-        } else if (state.status == TasksMainScreenStatus.failure) {
+        if (state.status == TasksMainScreenStatus.failure) {
           await showDialog(
             context: context,
             builder: ((context) {
               String errorMessage;
-              if (state.errorStatus == TasksMainScreenError.onCreateError) {
-                errorMessage = 'Ошибочка...';
-              } else if (state.errorStatus ==
-                  TasksMainScreenError.onDeleteError) {
-                errorMessage = 'Ошибочка...';
-              } else if (state.errorStatus ==
-                  TasksMainScreenError.onUpdateError) {
-                errorMessage = 'Ошибочка...';
-              } else if (state.errorStatus ==
-                  TasksMainScreenError.onRefreshError) {
-                errorMessage = 'Ошибочка...';
-              } else {
-                errorMessage = 'Странная ошибочка...';
+              switch (state.errorStatus) {
+                case TasksMainScreenError.none:
+                  errorMessage = 'Нет ошибочки...';
+                  break;
+                case TasksMainScreenError.onCreateError:
+                  errorMessage = 'Ошибочка при создании...';
+                  break;
+                case TasksMainScreenError.onDeleteError:
+                  errorMessage = 'Ошибочка при удалении...';
+                  break;
+                case TasksMainScreenError.onUpdateError:
+                  errorMessage = 'Ошибочка при изменении...';
+                  break;
+                case TasksMainScreenError.onRefreshError:
+                  errorMessage = 'Ошибочка при обновлении...';
+                  break;
               }
+
               return AlertDialog(
                 content: Text(errorMessage),
               );
             }),
           );
-          Navigator.of(context).pop(false);
         }
       },
       child: WillPopScope(
@@ -54,10 +53,10 @@ class MainPage extends StatelessWidget {
           },
           child: Scaffold(
             body: const CustomScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               slivers: <Widget>[
                 WideAppBarWidget(),
-                // TasksListWidget(),
+                TasksListWidget(),
               ],
             ),
             floatingActionButton: FloatingActionButton(

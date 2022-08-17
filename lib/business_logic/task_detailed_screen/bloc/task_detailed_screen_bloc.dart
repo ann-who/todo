@@ -1,9 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_event.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_state.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
+
+part 'task_detailed_screen_event.dart';
+part 'task_detailed_screen_state.dart';
 
 class TaskDetailedScreenBloc
     extends Bloc<TaskDetailedScreenEvent, TaskDetailedScreenState> {

@@ -4,10 +4,9 @@ import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:todo_app/app_theme/theme_manager.dart';
-import 'package:todo_app/business_logic/main_screen/main_screen.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/task_detailed_screen.dart';
 import 'package:todo_app/data/repository/remote_task_repository.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
+import 'package:todo_app/presentation/pages/main_screen.dart';
 
 void main() {
   runApp(

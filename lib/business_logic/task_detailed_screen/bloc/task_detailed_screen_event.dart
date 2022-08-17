@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:todo_app/models/task_model.dart';
+part of 'task_detailed_screen_bloc.dart';
 
 abstract class TaskDetailedScreenEvent extends Equatable {
   const TaskDetailedScreenEvent();

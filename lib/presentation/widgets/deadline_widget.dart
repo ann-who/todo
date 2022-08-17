@@ -6,8 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_bloc.dart';
-import 'package:todo_app/business_logic/task_detailed_screen/bloc/task_detailed_screen_event.dart';
+import 'package:todo_app/business_logic/task_detailed_screen/bloc_for_task_detailed_screen.dart';
 import 'package:todo_app/presentation/widgets/task_deadline_calendar.dart';
 import 'package:todo_app/resources/app_constants.dart';
 

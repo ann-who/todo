@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
-import 'package:todo_app/presentation/widgets/app_button.dart';
+import 'package:todo_app/business_logic/main_screen/bloc_for_main_screen.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_icon_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
 class WideAppBarWidget extends StatelessWidget {
@@ -99,17 +101,24 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   duration: const Duration(
                     milliseconds: WidgetsSettings.animationDuration,
                   ),
-                  child:
-                      // AnimatedBuilder(
-                      // animation: completedCounter,
-                      // builder: (BuildContext context, Widget? child) {
-                      // return
-                      Text(
-                    '${AppLocalizations.of(context)!.done} — сделать счётчик',
-                    style: Theme.of(context).textTheme.subtitle1,
+                  child: AnimatedContainer(
+                    duration: const Duration(
+                      milliseconds: WidgetsSettings.animationDuration,
+                    ),
+                    // animation: ,
+                    // builder: (BuildContext context, Widget? child) {
+                    // return
+                    child:
+                        BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
+                      builder: (context, state) {
+                        return Text(
+                          '${AppLocalizations.of(context)!.done} — ${state.doneTasksCount}',
+                          style: Theme.of(context).textTheme.subtitle1,
+                        );
+                      },
+                    ),
+                    // },
                   ),
-                  // },
-                  //   ),
                 ),
               ],
             ),
@@ -180,23 +189,25 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Alignment.centerRight,
                 progress,
               ),
-              child:
-                  // AnimatedBuilder(
-                  //   animation: onlyUndoneVisible,
-                  //   builder: (BuildContext context, Widget? child) {
-                  //     return
-                  AppIconButton(
+              child: AnimatedContainer(
+                duration: const Duration(
+                  milliseconds: WidgetsSettings.animationDuration,
+                ),
+                child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
+                  builder: (context, state) {
+                    return AppIconButton(
                       onPressed: () {
-                        // TODO add toggle action
+                        context
+                            .read<TasksMainScreenBloc>()
+                            .add(const DoneTasksVisibilityToggled());
                       },
-                      iconPath:
-                          // onlyUndoneVisible.value
-                          // ?
-                          Icons.visibility_off
-                      // : Icons.visibility,
-                      ),
-              //   },
-              // ),
+                      iconPath: state.isDoneTasksVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ],
