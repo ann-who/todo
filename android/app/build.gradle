@@ -53,6 +53,19 @@ android {
         versionName flutterVersionName
     }
 
+    flavorDimensions "todo_app"
+    
+    productFlavors {
+        dev {
+            dimension "todo_app"
+            applicationIdSuffix ".dev"
+            versionNameSuffix ".dev"
+        }
+        prod {
+            dimension "todo_app"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -67,5 +80,5 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

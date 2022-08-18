@@ -2,7 +2,7 @@ import 'package:todo_app/data/network/revision_data_source.dart';
 import 'package:todo_app/data/network/task_data_source.dart';
 import 'package:todo_app/data/network/token_data_source.dart';
 import 'package:todo_app/data/repository/task_repository.dart';
-import 'package:todo_app/main.dart';
+import 'package:todo_app/todo_app.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
