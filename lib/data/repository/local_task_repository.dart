@@ -8,7 +8,7 @@ class LocalTaskRepository implements TaskRepository {
   final ToDoDatabase _toDoDatabase = ToDoDatabase();
 
   @override
-  bool needRefresh() => false;
+  bool get needRefresh => false;
 
   @override
   Future<void> createTask(Task task) async =>
@@ -79,6 +79,11 @@ class LocalTaskRepository implements TaskRepository {
       .get();
 
   @override
-  Future<void> updateTasksList(List<Task> tasks) async =>
-      throw UnimplementedError();
+  Future<List<Task>> updateTasksList(List<Task> tasks) async {
+    await _toDoDatabase.delete(_toDoDatabase.taskTable).go();
+    for (var task in tasks) {
+      createTask(task);
+    }
+    return getTasksList();
+  }
 }

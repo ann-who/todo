@@ -205,4 +205,42 @@ class TaskDataSource {
       result: tasksList,
     );
   }
+
+  Future<TaskDataSourceAnswer> updateTasksList(
+      int lastRevision, List<Task> tasksList) async {
+    Response response;
+    try {
+      response = await _dio.patch(
+        '/list',
+        options: Options(
+          headers: {
+            'X-Last-Known-Revision': lastRevision.toString(),
+            'Content-Type': 'application/json'
+          },
+        ),
+        data: jsonEncode({'list': jsonEncode(tasksList)}),
+      );
+    } on DioError catch (e) {
+      if (e.response == null) {
+        rethrow;
+      }
+
+      if (e.response!.statusCode != HttpStatus.ok) {
+        throw TaskDSException(
+            "При изменении задачи возникла ошибка. Попробуйте повторить позже.");
+      }
+
+      rethrow;
+    }
+
+    var result = response.data;
+    List<Task> resultTasksList = (result['list'] as List)
+        .map((element) => Task.fromJson(element))
+        .toList();
+
+    return TaskDataSourceAnswer(
+      revision: result['revision'],
+      result: resultTasksList,
+    );
+  }
 }

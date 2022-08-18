@@ -61,6 +61,10 @@ class TasksMainScreenBloc
 
       await _taskRepository.deleteTask(event.task.id);
       emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
+
+      if (_taskRepository.needRefresh) {
+        add(const TasksListRefreshed());
+      }
     } catch (e) {
       // TODO откат
       emit(
@@ -95,6 +99,10 @@ class TasksMainScreenBloc
       await _taskRepository
           .updateTask(event.task.copyWith(done: !event.task.done));
       emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
+
+      if (_taskRepository.needRefresh) {
+        add(const TasksListRefreshed());
+      }
     } catch (e) {
       emit(
         state.copyWith(
@@ -131,6 +139,10 @@ class TasksMainScreenBloc
           newTaskText: '',
         ),
       );
+
+      if (_taskRepository.needRefresh) {
+        add(const TasksListRefreshed());
+      }
     } catch (e) {
       emit(
         state.copyWith(
