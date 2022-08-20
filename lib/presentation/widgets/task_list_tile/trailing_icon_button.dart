@@ -17,19 +17,8 @@ class TaskTrailingIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppIconButton(
-      onPressed: () async {
-        bool? needUpdate = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TaskDetailedScreen(
-              initialTask: initialTask,
-            ),
-          ),
-        );
-        if (needUpdate == true) {
-          context.read<TasksMainScreenBloc>().add(const TasksListRefreshed());
-        }
-      },
+      onPressed: () =>
+          context.read<TasksMainScreenBloc>().add(TaskEditOpened(initialTask)),
       iconPath: Icons.info_outline,
       color: Theme.of(context).iconTheme.color,
     );

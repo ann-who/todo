@@ -15,6 +15,8 @@ class TaskDetailedScreen extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  static const routeName = '/detailed';
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

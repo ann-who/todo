@@ -8,6 +8,7 @@ import 'package:todo_app/presentation/pages/main_page.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
+  static const routeName = '/';
 
   @override
   Widget build(BuildContext context) {

@@ -17,25 +17,30 @@ class NewTaskFromListTextField extends StatelessWidget {
       ),
       child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
         builder: (context, state) {
-          return TextFormField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.newToDo,
+          return Focus(
+            child: TextFormField(
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.newToDo,
+              ),
+              style: Theme.of(context).textTheme.bodyText1,
+              maxLines: null,
+              textInputAction: TextInputAction.done,
+              enabled: !state.status.isBusy,
+              onChanged: (taskText) => context
+                  .read<TasksMainScreenBloc>()
+                  .add(TaskTextChanged(taskText)),
+              onFieldSubmitted: (value) {
+                if (value.isEmpty) {
+                  return;
+                }
+                context.read<TasksMainScreenBloc>().add(const TaskSubmitted());
+                controller.clear();
+              },
             ),
-            style: Theme.of(context).textTheme.bodyText1,
-            maxLines: null,
-            textInputAction: TextInputAction.done,
-            enabled: !state.status.isBusy,
-            onChanged: (taskText) => context
+            onFocusChange: (hasFocus) => context
                 .read<TasksMainScreenBloc>()
-                .add(TaskTextChanged(taskText)),
-            onFieldSubmitted: (value) {
-              if (value.isEmpty) {
-                return;
-              }
-              context.read<TasksMainScreenBloc>().add(const TaskSubmitted());
-              controller.clear();
-            },
+                .add(TaskFieldFocusChanged(hasFocus)),
           );
         },
       ),

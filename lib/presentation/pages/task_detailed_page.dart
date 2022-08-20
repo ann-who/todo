@@ -19,7 +19,10 @@ class TaskDetailedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+    return BlocConsumer<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+      listenWhen: (previous, current) =>
+          previous.status == TaskDetailedScreenStatus.loading &&
+          current.status.isResult,
       listener: (context, state) async {
         if (state.status == TaskDetailedScreenStatus.success) {
           Navigator.of(context).pop(true);
@@ -45,90 +48,90 @@ class TaskDetailedPage extends StatelessWidget {
           Navigator.of(context).pop(true);
         }
       },
-      child: WillPopScope(
-        onWillPop: () async {
-          final state = context.read<TaskDetailedScreenBloc>().state;
-          if (!state.isChanged) {
-            return true;
-          }
+      builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () async {
+            if (!state.isChanged) {
+              return true;
+            }
 
-          var isNeedSave = await isNeedSaveBeforeClose(context);
-          if (isNeedSave == NeedSaveAnswer.exitNotNeeded) {
-            return false;
-          } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
-            return true;
-          }
+            var isNeedSave = await isNeedSaveBeforeClose(context);
+            if (isNeedSave == NeedSaveAnswer.exitNotNeeded) {
+              return false;
+            } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
+              return true;
+            }
 
-          context.read<TaskDetailedScreenBloc>().add(const TaskSubmitted());
-          return false; // pop будет после завершения
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            leading: AppIconButton(
-              iconPath: Icons.close,
-              color: Theme.of(context).appBarTheme.iconTheme!.color,
-              onPressed: () async {
-                // TODO incapsulate navigation phase 2
-                final state = context.read<TaskDetailedScreenBloc>().state;
-                if (!state.isChanged) {
-                  Navigator.of(context).pop();
-                  return;
-                }
+            context.read<TaskDetailedScreenBloc>().add(const TaskSubmitted());
+            return false; // pop будет после завершения
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: AppIconButton(
+                iconPath: Icons.close,
+                color: Theme.of(context).appBarTheme.iconTheme!.color,
+                onPressed: () async {
+                  // TODO incapsulate navigation phase 2
+                  if (!state.isChanged) {
+                    Navigator.of(context).pop();
+                    return;
+                  }
 
-                var isNeedSave = await isNeedSaveBeforeClose(context);
-                if (isNeedSave == NeedSaveAnswer.needed) {
-                  context
-                      .read<TaskDetailedScreenBloc>()
-                      .add(const TaskSubmitted());
-                  // pop будет после завершения
-                } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            actions: [
-              BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
-                builder: (context, state) {
-                  Brightness? brightness =
-                      MediaQuery.of(context).platformBrightness;
-                  return AppTextButton(
-                    value: AppLocalizations.of(context)!.save,
-                    onPressed: !state.isChanged ||
-                            state.status.isLoadingOrSuccess ||
-                            state.taskText.isEmpty
-                        ? null
-                        : () {
-                            context
-                                .read<TaskDetailedScreenBloc>()
-                                .add(const TaskSubmitted());
-                          },
-                    color: (!state.isChanged ||
-                            state.status.isLoadingOrSuccess ||
-                            state.taskText.isEmpty)
-                        ? (brightness == Brightness.light)
-                            ? ToDoColors.labelDisableLight
-                            : ToDoColors.labelDisableDark
-                        : null,
-                  );
+                  var isNeedSave = await isNeedSaveBeforeClose(context);
+                  if (isNeedSave == NeedSaveAnswer.needed) {
+                    context
+                        .read<TaskDetailedScreenBloc>()
+                        .add(const TaskSubmitted());
+                    // pop будет после завершения
+                  } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
+                    Navigator.of(context).pop();
+                  }
                 },
               ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                TaskTextWidget(),
-                AppPriorityPopupButton(),
-                AppDivider(padding: WidgetsSettings.smallScreenPadding),
-                DeadlineWidget(),
-                AppDivider(),
-                AppTextWithIconButton(),
+              actions: [
+                BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+                  builder: (context, state) {
+                    Brightness? brightness =
+                        MediaQuery.of(context).platformBrightness;
+                    return AppTextButton(
+                      value: AppLocalizations.of(context)!.save,
+                      onPressed: !state.isChanged ||
+                              state.status.isLoadingOrSuccess ||
+                              state.taskText.isEmpty
+                          ? null
+                          : () {
+                              context
+                                  .read<TaskDetailedScreenBloc>()
+                                  .add(const TaskSubmitted());
+                            },
+                      color: (!state.isChanged ||
+                              state.status.isLoadingOrSuccess ||
+                              state.taskText.isEmpty)
+                          ? (brightness == Brightness.light)
+                              ? ToDoColors.labelDisableLight
+                              : ToDoColors.labelDisableDark
+                          : null,
+                    );
+                  },
+                ),
               ],
             ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  TaskTextWidget(),
+                  AppPriorityPopupButton(),
+                  AppDivider(padding: WidgetsSettings.smallScreenPadding),
+                  DeadlineWidget(),
+                  AppDivider(),
+                  AppTextWithIconButton(),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -138,22 +141,23 @@ enum NeedSaveAnswer { exitNotNeeded, needed, notNeeded }
 Future<NeedSaveAnswer> isNeedSaveBeforeClose(BuildContext context) async {
   var isNeeded = await showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.alertSaveTask),
+    builder: (BuildContext dialogContext) => BlocProvider.value(
+      value: context.read<TaskDetailedScreenBloc>(),
+      child: AlertDialog(
+        title: Text(AppLocalizations.of(dialogContext)!.alertSaveTask),
         actions: [
           AppTextButton(
-            value: AppLocalizations.of(context)!.save,
-            onPressed: () => Navigator.of(context).pop(true),
+            value: AppLocalizations.of(dialogContext)!.save,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
           ),
           AppTextButton(
-            value: AppLocalizations.of(context)!.exit,
-            onPressed: () => Navigator.of(context).pop(false),
+            value: AppLocalizations.of(dialogContext)!.exit,
+            onPressed: () => Navigator.of(dialogContext).pop(false),
           ),
         ],
         actionsAlignment: MainAxisAlignment.spaceEvenly,
-      );
-    },
+      ),
+    ),
   );
 
   if (isNeeded == null) {

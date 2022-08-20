@@ -29,72 +29,73 @@ class DeadlineWidget extends StatelessWidget {
         right: WidgetsSettings.smallScreenPadding,
         bottom: WidgetsSettings.bigScreenPadding,
       ),
-      child: SwitchListTile(
-        value: context.watch<TaskDetailedScreenBloc>().state.hasDeadline,
-        activeColor: brightness == Brightness.light
-            ? ToDoColors.blueLight
-            : ToDoColors.blueDark,
-        onChanged: (bool newState) async {
-          if (newState == false) {
-            context
-                .read<TaskDetailedScreenBloc>()
-                .add(const TaskDeadlineChanged());
-            return;
-          }
+      child: BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+        buildWhen: (previous, current) => previous.deadline != current.deadline,
+        builder: (context, state) {
+          return SwitchListTile(
+            value: state.hasDeadline,
+            activeColor: brightness == Brightness.light
+                ? ToDoColors.blueLight
+                : ToDoColors.blueDark,
+            onChanged: (bool newState) async {
+              if (newState == false) {
+                context
+                    .read<TaskDetailedScreenBloc>()
+                    .add(const TaskDeadlineChanged());
+                return;
+              }
 
-          int? deadline = await showDialog(
-            context: context,
-            //! TODO refactor implementation
-            builder: (context) => BlocProvider(
-              create: (context) => TaskDetailedScreenBloc(
-                taskRepository: context.read<TaskRepository>(),
-              ),
-              child: AlertDialog(
-                content: SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.4,
-                  width: MediaQuery.of(context).size.width -
-                      WidgetsSettings.smallScreenPadding,
-                  child: const TaskDeadlineCalendar(),
-                ),
-                contentPadding: const EdgeInsets.all(
-                  WidgetsSettings.noPadding,
-                ),
-                backgroundColor: ToDoColors.backSecondaryLight,
-              ),
-            ),
-          );
-          var currentDeadline =
-              context.read<TaskDetailedScreenBloc>().state.deadline;
-          if (deadline != null && deadline != currentDeadline) {
-            context
-                .read<TaskDetailedScreenBloc>()
-                .add(TaskDeadlineChanged(deadline));
-          }
-        },
-        title: Text(
-          AppLocalizations.of(context)!.deadline,
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
-        subtitle: BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
-          builder: (context, state) {
-            if (!state.hasDeadline) {
-              return Container();
-            }
-
-            String formatted = formatter.format(
-              DateTime.fromMillisecondsSinceEpoch(state.deadline * 1000),
-            );
-
-            return Text(
-              formatted,
-              style: Theme.of(context).textTheme.caption!.copyWith(
-                    color: brightness == Brightness.light
-                        ? ToDoColors.blueLight
-                        : ToDoColors.blueDark,
+              int? deadline = await showDialog(
+                context: context,
+                builder: (dialogContext) => BlocProvider.value(
+                  value: context.read<TaskDetailedScreenBloc>(),
+                  child: AlertDialog(
+                    content: SizedBox(
+                      height: MediaQuery.of(dialogContext).size.height / 1.4,
+                      width: MediaQuery.of(dialogContext).size.width -
+                          WidgetsSettings.smallScreenPadding,
+                      child: const TaskDeadlineCalendar(),
+                    ),
+                    contentPadding: const EdgeInsets.all(
+                      WidgetsSettings.noPadding,
+                    ),
+                    backgroundColor: ToDoColors.backSecondaryLight,
                   ),
-            );
-          },
-        ),
+                ),
+              );
+
+              var currentDeadline = state.deadline;
+
+              if (deadline == null || deadline == currentDeadline) {
+                return;
+              }
+
+              // @dzolotov как понимаю, эта ошидка для statefull и ложно срабатывает?
+              // ignore: use_build_context_synchronously
+              context
+                  .read<TaskDetailedScreenBloc>()
+                  .add(TaskDeadlineChanged(deadline));
+            },
+            title: Text(
+              AppLocalizations.of(context)!.deadline,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            subtitle: !state.hasDeadline
+                ? null
+                : Text(
+                    formatter.format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        state.deadline * 1000,
+                      ),
+                    ),
+                    style: Theme.of(context).textTheme.caption!.copyWith(
+                          color: brightness == Brightness.light
+                              ? ToDoColors.blueLight
+                              : ToDoColors.blueDark,
+                        ),
+                  ),
+          );
+        },
       ),
     );
   }

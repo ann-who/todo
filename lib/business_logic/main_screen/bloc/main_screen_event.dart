@@ -45,3 +45,29 @@ class DoneTasksVisibilityToggled extends TasksMainScreenEvent {
 class TasksListRefreshed extends TasksMainScreenEvent {
   const TasksListRefreshed();
 }
+
+class TaskFieldFocusChanged extends TasksMainScreenEvent {
+  final bool hasFocus;
+
+  const TaskFieldFocusChanged(this.hasFocus);
+
+  @override
+  List<Object?> get props => [hasFocus];
+}
+
+class TaskCreationOpened extends TasksMainScreenEvent {
+  const TaskCreationOpened();
+}
+
+class TaskEditOpened extends TasksMainScreenEvent {
+  final Task task;
+
+  const TaskEditOpened(this.task);
+
+  @override
+  List<Object?> get props => [task];
+}
+
+class TaskEditCompleted extends TasksMainScreenEvent {
+  const TaskEditCompleted();
+}

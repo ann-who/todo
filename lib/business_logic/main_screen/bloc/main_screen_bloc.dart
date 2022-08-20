@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
@@ -21,30 +22,42 @@ class TasksMainScreenBloc
             newTaskText: '',
           ),
         ) {
-    on<TaskFromListDeleted>(_onTaskDeleted);
-    on<TaskCompletionToggled>(_onTaskCompletionToggled);
+    on<TaskFromListDeleted>(
+      _onTaskDeleted,
+      transformer: sequential(),
+    );
+    on<TaskCompletionToggled>(
+      _onTaskCompletionToggled,
+      transformer: sequential(),
+    );
+    on<TaskSubmitted>(
+      _onTaskSubmitted,
+      transformer: sequential(),
+    );
+    on<TasksListRefreshed>(
+      _onTasksListRefreshed,
+      transformer: sequential(),
+    );
     on<TaskTextChanged>(_onTaskTextChanged);
-    on<TaskSubmitted>(_onTaskSubmitted);
     on<DoneTasksVisibilityToggled>(_onDoneTasksVisibilityToggled);
-    on<TasksListRefreshed>(_onTasksListRefreshed);
+    on<TaskFieldFocusChanged>(_onTaskFieldFocusChanged);
+    on<TaskCreationOpened>(_onTaskCreationOpened);
+    on<TaskEditOpened>(_onTaskEditOpened);
+    on<TaskEditCompleted>(_onTaskEditCompleted);
   }
 
   void _onTaskDeleted(
     TaskFromListDeleted event,
     Emitter<TasksMainScreenState> emit,
   ) async {
-    emit(state.copyWith(status: TasksMainScreenStatus.onChanges));
+    emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
     try {
-      var newTaskList = state.tasksList;
-      newTaskList.removeWhere(
+      var updatedTaskList = List<Task>.from(state.tasksList);
+      updatedTaskList.removeWhere(
         (element) => element.id == event.task.id,
       );
-      emit(
-        state.copyWith(
-          status: TasksMainScreenStatus.onChanges,
-          tasksList: newTaskList,
-        ),
-      );
+
+      emit(state.copyWith(tasksList: updatedTaskList));
 
       await _taskRepository.deleteTask(event.task.id);
       emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
@@ -63,30 +76,21 @@ class TasksMainScreenBloc
     TaskCompletionToggled event,
     Emitter<TasksMainScreenState> emit,
   ) async {
-    emit(state.copyWith(status: TasksMainScreenStatus.onChanges));
+    emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
     try {
-      var newTaskList = state.tasksList;
-      // ищем индекс элемента
+      var updatedTaskList = List<Task>.from(state.tasksList);
       int elementIndex =
-          newTaskList.indexWhere((element) => element.id == event.task.id);
-      // если индекс -1 сделать обычный статус и ретерн
+          updatedTaskList.indexWhere((element) => element.id == event.task.id);
       if (elementIndex == -1) {
         emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
         return;
       }
-      // по индексу берем элемент
-      var element = newTaskList[elementIndex];
-      // создаем копию, у которой статус выполнения  противоположный
+
+      var element = updatedTaskList[elementIndex];
       var newElement = element.copyWith(done: !element.done);
-      // заменяем старое значение на новое по индексу, который нашли
-      newTaskList[elementIndex] = newElement;
-      // запоминаем список с измененным таском в состоянии и отображаем его
-      emit(
-        state.copyWith(
-          status: TasksMainScreenStatus.onChanges,
-          tasksList: newTaskList,
-        ),
-      );
+      updatedTaskList[elementIndex] = newElement;
+
+      emit(state.copyWith(tasksList: updatedTaskList));
 
       await _taskRepository
           .updateTask(event.task.copyWith(done: !event.task.done));
@@ -112,22 +116,13 @@ class TasksMainScreenBloc
     TaskSubmitted event,
     Emitter<TasksMainScreenState> emit,
   ) async {
-    emit(state.copyWith(status: TasksMainScreenStatus.onChanges));
+    emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
     try {
-      var newTaskList = state.tasksList;
+      var updatedTaskList = List<Task>.from(state.tasksList);
       var newTask = Task.minimal(state.newTaskText);
-      newTaskList.add(newTask);
+      updatedTaskList.add(newTask);
 
-      emit(
-        state.copyWith(
-          status: TasksMainScreenStatus.onChanges,
-          newTaskText: newTask.text,
-        ),
-      );
-
-      // взять список
-      // добавить в конец newTask
-      // засунуть новый список в состояние
+      emit(state.copyWith(tasksList: updatedTaskList));
 
       await _taskRepository.createTask(newTask);
       emit(
@@ -165,6 +160,7 @@ class TasksMainScreenBloc
         state.copyWith(
           status: TasksMainScreenStatus.ordinary,
           tasksList: tasksList,
+          taskOnEdition: null,
         ),
       );
     } catch (e) {
@@ -175,5 +171,39 @@ class TasksMainScreenBloc
         ),
       );
     }
+  }
+
+  void _onTaskFieldFocusChanged(
+    TaskFieldFocusChanged event,
+    Emitter<TasksMainScreenState> emit,
+  ) async {
+    emit(state.copyWith(fieldHasFocus: event.hasFocus));
+  }
+
+  void _onTaskCreationOpened(
+    TaskCreationOpened event,
+    Emitter<TasksMainScreenState> emit,
+  ) async {
+    emit(state.copyWith(status: TasksMainScreenStatus.onCreate));
+  }
+
+  void _onTaskEditOpened(
+    TaskEditOpened event,
+    Emitter<TasksMainScreenState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: TasksMainScreenStatus.onEdit,
+      taskOnEdition: event.task,
+    ));
+  }
+
+  void _onTaskEditCompleted(
+    TaskEditCompleted event,
+    Emitter<TasksMainScreenState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: TasksMainScreenStatus.ordinary,
+      taskOnEdition: null,
+    ));
   }
 }

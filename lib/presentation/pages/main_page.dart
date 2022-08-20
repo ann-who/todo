@@ -12,9 +12,27 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TasksMainScreenBloc, TasksMainScreenState>(
+    return BlocConsumer<TasksMainScreenBloc, TasksMainScreenState>(
       listener: (context, state) async {
-        if (state.status == TasksMainScreenStatus.failure) {
+        if (state.status == TasksMainScreenStatus.onCreate) {
+          Navigator.pushNamed(context, '/detailed').then((needUpdate) {
+            var event = (needUpdate == true)
+                ? const TasksListRefreshed()
+                : const TaskEditCompleted();
+            context.read<TasksMainScreenBloc>().add(event);
+          });
+        } else if (state.status == TasksMainScreenStatus.onEdit) {
+          Navigator.pushNamed(
+            context,
+            '/detailed',
+            arguments: state.taskOnEdition,
+          ).then((needUpdate) {
+            var event = (needUpdate == true)
+                ? const TasksListRefreshed()
+                : const TaskEditCompleted();
+            context.read<TasksMainScreenBloc>().add(event);
+          });
+        } else if (state.status == TasksMainScreenStatus.failure) {
           await showDialog(
             context: context,
             builder: ((context) {
@@ -44,41 +62,48 @@ class MainPage extends StatelessWidget {
           );
         }
       },
-      child: WillPopScope(
-        onWillPop: () => Future.value(false),
-        child: RefreshIndicator(
-          onRefresh: () {
-            context.read<TasksMainScreenBloc>().add(const TasksListRefreshed());
-            return Future.value();
+      builder: (context, state) => GestureDetector(
+        onTap: () => _unfocus(context),
+        child: WillPopScope(
+          onWillPop: () {
+            _unfocus(context);
+            return Future.value(false);
           },
-          child: Scaffold(
-            body: const CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              slivers: <Widget>[
-                WideAppBarWidget(),
-                TasksListWidget(),
-              ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              // TODO incapsulate navigation
-              onPressed: () async {
-                bool? needUpdate = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TaskDetailedScreen(),
-                  ),
-                );
-                if (needUpdate == true) {
-                  context
-                      .read<TasksMainScreenBloc>()
-                      .add(const TasksListRefreshed());
-                }
-              },
-              child: const Icon(Icons.add),
+          child: RefreshIndicator(
+            onRefresh: () {
+              context
+                  .read<TasksMainScreenBloc>()
+                  .add(const TasksListRefreshed());
+              return Future.value();
+            },
+            child: Scaffold(
+              body: const CustomScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                slivers: <Widget>[
+                  WideAppBarWidget(),
+                  TasksListWidget(),
+                ],
+              ),
+              floatingActionButton: state.fieldHasFocus
+                  ? null
+                  : FloatingActionButton(
+                      onPressed: () => context
+                          .read<TasksMainScreenBloc>()
+                          .add(const TaskCreationOpened()),
+                      child: const Icon(Icons.add),
+                    ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _unfocus(BuildContext context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 }

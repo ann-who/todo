@@ -1,14 +1,29 @@
 part of 'main_screen_bloc.dart';
 
 enum TasksMainScreenStatus {
+  /// Нормальное состояние экрана
   ordinary,
-  onChanges,
+
+  /// Создание задачи со второго экрана
+  onCreate,
+
+  /// Редактирование задачи со второго экрана
+  onEdit,
+
+  /// Редактирование списка задач без необходимости обновления
+  onDataChanges,
+
+  /// Обновление списка задач
   loading,
+
+  /// Ошибка выполненения действия
   failure;
 
   bool get isBusy => [
-        TasksMainScreenStatus.onChanges,
-        TasksMainScreenStatus.loading
+        TasksMainScreenStatus.onDataChanges,
+        TasksMainScreenStatus.loading,
+        TasksMainScreenStatus.onCreate,
+        TasksMainScreenStatus.onEdit,
       ].contains(this);
 }
 
@@ -26,6 +41,8 @@ class TasksMainScreenState extends Equatable {
   final List<Task> tasksList;
   final bool isDoneTasksVisible;
   final String newTaskText;
+  final bool fieldHasFocus;
+  final Task? taskOnEdition;
 
   const TasksMainScreenState({
     this.status = TasksMainScreenStatus.ordinary,
@@ -33,6 +50,8 @@ class TasksMainScreenState extends Equatable {
     this.tasksList = const [],
     this.isDoneTasksVisible = true,
     this.newTaskText = '',
+    this.fieldHasFocus = false,
+    this.taskOnEdition,
   });
 
   Iterable<Task> get filteredTasks =>
@@ -52,6 +71,8 @@ class TasksMainScreenState extends Equatable {
     List<Task>? tasksList,
     bool? isDoneTasksVisible,
     String? newTaskText,
+    bool? fieldHasFocus,
+    Task? taskOnEdition,
   }) {
     return TasksMainScreenState(
       status: status ?? this.status,
@@ -59,6 +80,8 @@ class TasksMainScreenState extends Equatable {
       tasksList: tasksList ?? this.tasksList,
       isDoneTasksVisible: isDoneTasksVisible ?? this.isDoneTasksVisible,
       newTaskText: newTaskText ?? this.newTaskText,
+      fieldHasFocus: fieldHasFocus ?? this.fieldHasFocus,
+      taskOnEdition: taskOnEdition ?? this.taskOnEdition,
     );
   }
 
@@ -69,5 +92,6 @@ class TasksMainScreenState extends Equatable {
         tasksList,
         isDoneTasksVisible,
         newTaskText,
+        fieldHasFocus,
       ];
 }
