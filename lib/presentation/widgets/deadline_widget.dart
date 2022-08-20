@@ -84,9 +84,7 @@ class DeadlineWidget extends StatelessWidget {
                 ? null
                 : Text(
                     formatter.format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                        state.deadline * 1000,
-                      ),
+                      DateTime.fromMillisecondsSinceEpoch(state.deadline),
                     ),
                     style: Theme.of(context).textTheme.caption!.copyWith(
                           color: brightness == Brightness.light

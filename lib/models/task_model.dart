@@ -43,7 +43,7 @@ class Task with _$Task {
     bool done = false,
     String? color,
   }) {
-    var unixTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    var unixTime = DateTime.now().millisecondsSinceEpoch;
     return Task(
       id: const Uuid().v4(),
       text: text,
@@ -58,7 +58,7 @@ class Task with _$Task {
   }
 
   factory Task.minimal(String text) {
-    var unixTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    var unixTime = DateTime.now().millisecondsSinceEpoch;
     return Task(
       id: const Uuid().v4(),
       text: text,

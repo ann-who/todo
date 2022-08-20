@@ -20,7 +20,7 @@ class TaskDeadlineSubtitle extends StatelessWidget {
           ? null
           : Text(
               formatter.format(
-                DateTime.fromMillisecondsSinceEpoch(deadline * 1000),
+                DateTime.fromMillisecondsSinceEpoch(deadline),
               ),
               style: Theme.of(context).textTheme.caption,
             ),
