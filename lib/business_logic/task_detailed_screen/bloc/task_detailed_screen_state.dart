@@ -10,6 +10,11 @@ enum TaskDetailedScreenStatus {
         TaskDetailedScreenStatus.loading,
         TaskDetailedScreenStatus.success
       ].contains(this);
+
+  bool get isResult => [
+        TaskDetailedScreenStatus.success,
+        TaskDetailedScreenStatus.failure
+      ].contains(this);
 }
 
 enum TaskDetailedScreenError {
