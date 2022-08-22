@@ -59,6 +59,11 @@ class RemoteTaskRepository implements TaskRepository {
     await getTasksList();
   }
 
+  Future<void> onRefreshRevisionResolver() async {
+    var result = await _taskDataSource!.getTasksList();
+    _revisionDataSource.setRevision(result.revision);
+  }
+
   // Переопределение базового класса
 
   @override
@@ -167,7 +172,14 @@ class RemoteTaskRepository implements TaskRepository {
       rethrow;
     }
 
-    _revisionDataSource.setRevision(result.revision);
+    var lastRevision = await _revisionDataSource.getRevision();
+    if (lastRevision != result.revision) {
+      await onRefreshRevisionResolver();
+      _needRefresh = true;
+    } else {
+      _revisionDataSource.setRevision(result.revision);
+    }
+
     return result.result as List<Task>;
   }
 

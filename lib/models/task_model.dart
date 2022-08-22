@@ -53,7 +53,7 @@ class Task with _$Task {
       createdAt: unixTime,
       changedAt: unixTime,
       color: color,
-      lastUpdatedBy: 'dev-phone', //! TODO fix uuid
+      lastUpdatedBy: 'unknown-device',
     );
   }
 
@@ -67,7 +67,7 @@ class Task with _$Task {
       done: false,
       createdAt: unixTime,
       changedAt: unixTime,
-      lastUpdatedBy: 'dev-phone', //! TODO fix uuid
+      lastUpdatedBy: 'unknown-device',
     );
   }
 

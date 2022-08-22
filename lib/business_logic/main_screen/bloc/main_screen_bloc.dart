@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_id/android_id.dart';
 
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
@@ -91,7 +95,11 @@ class TasksMainScreenBloc
       }
 
       var element = updatedTaskList[elementIndex];
-      var newElement = element.copyWith(done: !element.done);
+      var newElement = element.copyWith(
+        done: !element.done,
+        changedAt: DateTime.now().millisecondsSinceEpoch,
+        lastUpdatedBy: await _getDeviceId(),
+      );
       updatedTaskList[elementIndex] = newElement;
 
       emit(state.copyWith(tasksList: updatedTaskList));
@@ -127,7 +135,9 @@ class TasksMainScreenBloc
     emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
     try {
       var updatedTaskList = List<Task>.from(state.tasksList);
-      var newTask = Task.minimal(state.newTaskText);
+      var newTask = Task.minimal(state.newTaskText).copyWith(
+        lastUpdatedBy: await _getDeviceId(),
+      );
       updatedTaskList.add(newTask);
 
       emit(state.copyWith(tasksList: updatedTaskList));
@@ -217,5 +227,23 @@ class TasksMainScreenBloc
       status: TasksMainScreenStatus.ordinary,
       taskOnEdition: null,
     ));
+  }
+
+  Future<String> _getDeviceId() async {
+    String deviceId = 'unknown-device';
+
+    try {
+      if (Platform.isIOS) {
+        final deviceInfo = DeviceInfoPlugin();
+        var iosDeviceInfo = await deviceInfo.iosInfo;
+        deviceId = iosDeviceInfo.identifierForVendor!;
+      } else if (Platform.isAndroid) {
+        deviceId = (await const AndroidId().getId())!;
+      }
+    } catch (e) {
+      // TODO log
+    }
+
+    return deviceId;
   }
 }

@@ -218,7 +218,7 @@ class TaskDataSource {
             'Content-Type': 'application/json'
           },
         ),
-        data: jsonEncode({'list': jsonEncode(tasksList)}),
+        data: jsonEncode({'list': tasksList}),
       );
     } on DioError catch (e) {
       if (e.response == null) {
