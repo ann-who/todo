@@ -1,0 +1,27 @@
+name: ToDo App release
+
+on: release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --split-per-abi
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v3
+          with:
+            path: build/app/outputs/apk/dev/debug/app_dev_debug.apk
