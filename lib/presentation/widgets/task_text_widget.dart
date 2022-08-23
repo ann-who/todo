@@ -14,11 +14,11 @@ class TaskTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        WidgetsSettings.smallScreenPadding,
-        WidgetsSettings.smallScreenPadding,
-        WidgetsSettings.smallScreenPadding,
-        WidgetsSettings.bigScreenPadding,
+      padding: const EdgeInsets.only(
+        left: WidgetsSettings.smallScreenPadding,
+        top: WidgetsSettings.smallScreenPadding,
+        right: WidgetsSettings.smallScreenPadding,
+        bottom: WidgetsSettings.bigScreenPadding,
       ),
       child: Card(
         child: TextFormField(

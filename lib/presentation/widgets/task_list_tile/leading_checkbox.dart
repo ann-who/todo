@@ -34,7 +34,8 @@ class TaskCheckbox extends StatelessWidget {
           value: isChecked,
           onChanged: onChanged,
           side: Theme.of(context).checkboxTheme.side!.copyWith(
-                color: importance == Importance.basic
+                color: importance == Importance.basic ||
+                        importance == Importance.low
                     ? basicColor
                     : importantColor,
               ),

@@ -65,17 +65,14 @@ class MainPage extends StatelessWidget {
       builder: (context, state) => GestureDetector(
         onTap: () => _unfocus(context),
         child: WillPopScope(
-          onWillPop: () {
+          onWillPop: () async {
             _unfocus(context);
-            return Future.value(false);
+            return false;
           },
           child: RefreshIndicator(
-            onRefresh: () {
-              context
-                  .read<TasksMainScreenBloc>()
-                  .add(const TasksListRefreshed());
-              return Future.value();
-            },
+            onRefresh: () async => context
+                .read<TasksMainScreenBloc>()
+                .add(const TasksListRefreshed()),
             child: Scaffold(
               body: const CustomScrollView(
                 physics: AlwaysScrollableScrollPhysics(),

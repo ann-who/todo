@@ -21,11 +21,9 @@ class TaskItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        WidgetsSettings.listTileSmallPadding,
-        WidgetsSettings.listTileVerticalPadding,
-        WidgetsSettings.listTileSmallPadding,
-        WidgetsSettings.listTileVerticalPadding,
+      padding: const EdgeInsets.symmetric(
+        horizontal: WidgetsSettings.listTileSmallPadding,
+        vertical: WidgetsSettings.listTileVerticalPadding,
       ),
       child: SizedBox(
         width: double.maxFinite,

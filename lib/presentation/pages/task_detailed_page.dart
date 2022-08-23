@@ -48,90 +48,86 @@ class TaskDetailedPage extends StatelessWidget {
           Navigator.of(context).pop(true);
         }
       },
-      builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () async {
-            if (!state.isChanged) {
-              return true;
-            }
+      builder: (context, state) => WillPopScope(
+        onWillPop: () async {
+          if (!state.isChanged) {
+            return true;
+          }
 
-            var isNeedSave = await isNeedSaveBeforeClose(context);
-            if (isNeedSave == NeedSaveAnswer.exitNotNeeded) {
-              return false;
-            } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
-              return true;
-            }
+          var isNeedSave = await isNeedSaveBeforeClose(context);
+          if (isNeedSave == NeedSaveAnswer.exitNotNeeded) {
+            return false;
+          } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
+            return true;
+          }
 
-            context.read<TaskDetailedScreenBloc>().add(const TaskSubmitted());
-            return false; // pop будет после завершения
-          },
-          child: Scaffold(
-            appBar: AppBar(
-              leading: AppIconButton(
-                iconPath: Icons.close,
-                color: Theme.of(context).appBarTheme.iconTheme!.color,
-                onPressed: () async {
-                  // TODO incapsulate navigation phase 2
-                  if (!state.isChanged) {
-                    Navigator.of(context).pop();
-                    return;
-                  }
+          context.read<TaskDetailedScreenBloc>().add(const TaskSubmitted());
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            leading: AppIconButton(
+              iconPath: Icons.close,
+              color: Theme.of(context).appBarTheme.iconTheme!.color,
+              onPressed: () async {
+                // TODO incapsulate navigation phase 2
+                if (!state.isChanged) {
+                  Navigator.of(context).pop();
+                  return;
+                }
 
-                  var isNeedSave = await isNeedSaveBeforeClose(context);
-                  if (isNeedSave == NeedSaveAnswer.needed) {
-                    context
-                        .read<TaskDetailedScreenBloc>()
-                        .add(const TaskSubmitted());
-                    // pop будет после завершения
-                  } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
-                    Navigator.of(context).pop();
-                  }
+                var isNeedSave = await isNeedSaveBeforeClose(context);
+                if (isNeedSave == NeedSaveAnswer.needed) {
+                  context
+                      .read<TaskDetailedScreenBloc>()
+                      .add(const TaskSubmitted());
+                  // pop будет после завершения
+                } else if (isNeedSave == NeedSaveAnswer.notNeeded) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+            actions: [
+              BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
+                builder: (context, state) {
+                  Brightness? brightness =
+                      MediaQuery.of(context).platformBrightness;
+                  return AppTextButton(
+                    value: AppLocalizations.of(context)!.save,
+                    onPressed: !state.isChanged ||
+                            state.status.isLoadingOrSuccess ||
+                            state.taskText.isEmpty
+                        ? null
+                        : () => context
+                            .read<TaskDetailedScreenBloc>()
+                            .add(const TaskSubmitted()),
+                    color: (!state.isChanged ||
+                            state.status.isLoadingOrSuccess ||
+                            state.taskText.isEmpty)
+                        ? (brightness == Brightness.light)
+                            ? ToDoColors.labelDisableLight
+                            : ToDoColors.labelDisableDark
+                        : null,
+                  );
                 },
               ),
-              actions: [
-                BlocBuilder<TaskDetailedScreenBloc, TaskDetailedScreenState>(
-                  builder: (context, state) {
-                    Brightness? brightness =
-                        MediaQuery.of(context).platformBrightness;
-                    return AppTextButton(
-                      value: AppLocalizations.of(context)!.save,
-                      onPressed: !state.isChanged ||
-                              state.status.isLoadingOrSuccess ||
-                              state.taskText.isEmpty
-                          ? null
-                          : () {
-                              context
-                                  .read<TaskDetailedScreenBloc>()
-                                  .add(const TaskSubmitted());
-                            },
-                      color: (!state.isChanged ||
-                              state.status.isLoadingOrSuccess ||
-                              state.taskText.isEmpty)
-                          ? (brightness == Brightness.light)
-                              ? ToDoColors.labelDisableLight
-                              : ToDoColors.labelDisableDark
-                          : null,
-                    );
-                  },
-                ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                TaskTextWidget(),
+                AppPriorityPopupButton(),
+                AppDivider(padding: WidgetsSettings.smallScreenPadding),
+                DeadlineWidget(),
+                AppDivider(),
+                AppTextWithIconButton(),
               ],
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  TaskTextWidget(),
-                  AppPriorityPopupButton(),
-                  AppDivider(padding: WidgetsSettings.smallScreenPadding),
-                  DeadlineWidget(),
-                  AppDivider(),
-                  AppTextWithIconButton(),
-                ],
-              ),
-            ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

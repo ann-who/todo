@@ -24,62 +24,27 @@ class _TableBasicsExampleState extends State<TaskDeadlineCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formattedWeekday = DateFormat.E('ru');
-    final DateFormat formattedMonth = DateFormat.MMMM('ru');
+    final DateFormat formattedWeekday =
+        DateFormat.E(Localizations.localeOf(context).languageCode);
+    final DateFormat formattedMonth =
+        DateFormat.MMMM(Localizations.localeOf(context).languageCode);
 
     Brightness? brightness = MediaQuery.of(context).platformBrightness;
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: SizedBox(
-          // TODO calculate height
-          height: double.maxFinite,
+        child: SizedBox.fromSize(
           child: Column(
             children: [
-              SizedBox(
-                // TODO пользоваться MediaQuery.of(context) здесь сильно плохо?
-                height:
-                    (MediaQuery.of(context).orientation == Orientation.portrait)
-                        ? MediaQuery.of(context).size.height / 8
-                        : MediaQuery.of(context).size.height / 4,
-                width: double.infinity,
-                child: Container(
-                  color: brightness == Brightness.light
-                      ? ToDoColors.blueLight
-                      : ToDoColors.blueDark,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: WidgetsSettings.wideAppBarMediumPadding,
-                      vertical: WidgetsSettings.wideAppBarSmallPadding,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${_focusedDay.year}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: ToDoColors.whiteLight),
-                        ),
-                        Text(
-                          '${formattedWeekday.format(_focusedDay)}, ${formattedMonth.format(_focusedDay)} ${_focusedDay.day} ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline1!
-                              .copyWith(color: ToDoColors.whiteLight),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              CalendarHeader(
+                  brightness: brightness,
+                  focusedDay: _focusedDay,
+                  formattedWeekday: formattedWeekday,
+                  formattedMonth: formattedMonth),
               TableCalendar(
-                // TODO get system locale
-                locale: 'ru',
+                locale: Localizations.localeOf(context).languageCode,
                 firstDay: DateTime.now(),
-                lastDay: DateTime(2049),
+                lastDay: DateTime.now().add(const Duration(days: 36500)),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
                 startingDayOfWeek: StartingDayOfWeek.monday,
@@ -104,9 +69,13 @@ class _TableBasicsExampleState extends State<TaskDeadlineCalendar> {
                   ),
                 ),
                 availableGestures: AvailableGestures.horizontalSwipe,
-
                 calendarStyle: CalendarStyle(
                   outsideDaysVisible: false,
+                  weekendTextStyle: TextStyle(
+                    color: brightness == Brightness.light
+                        ? ToDoColors.labelPrimaryLight
+                        : ToDoColors.labelPrimaryDark,
+                  ),
                   todayDecoration: BoxDecoration(
                     color: brightness == Brightness.light
                         ? ToDoColors.blueLight.withOpacity(0.3)
@@ -136,28 +105,100 @@ class _TableBasicsExampleState extends State<TaskDeadlineCalendar> {
                   _focusedDay = focusedDay;
                 },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  AppTextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    value: AppLocalizations.of(context)!.cancel,
-                  ),
-                  AppTextButton(
-                    onPressed: () {
-                      _selectedDay != null
-                          ? Navigator.of(context)
-                              .pop(_selectedDay!.millisecondsSinceEpoch ~/ 1000)
-                          : Navigator.of(context).pop();
-                    },
-                    value: AppLocalizations.of(context)!.ok,
-                  ),
-                ],
-              ),
+              CalendarButtons(selectedDay: _selectedDay),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CalendarButtons extends StatelessWidget {
+  const CalendarButtons({
+    Key? key,
+    required DateTime? selectedDay,
+  })  : _selectedDay = selectedDay,
+        super(key: key);
+
+  final DateTime? _selectedDay;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        AppTextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          value: AppLocalizations.of(context)!.cancel,
+        ),
+        AppTextButton(
+          onPressed: () => _selectedDay != null
+              ? Navigator.of(context)
+                  .pop(_selectedDay!.millisecondsSinceEpoch ~/ 1000)
+              : Navigator.of(context).pop(),
+          value: AppLocalizations.of(context)!.ok,
+        ),
+      ],
+    );
+  }
+}
+
+class CalendarHeader extends StatelessWidget {
+  const CalendarHeader({
+    Key? key,
+    required this.brightness,
+    required DateTime focusedDay,
+    required this.formattedWeekday,
+    required this.formattedMonth,
+  })  : _focusedDay = focusedDay,
+        super(key: key);
+
+  final Brightness? brightness;
+  final DateTime _focusedDay;
+  final DateFormat formattedWeekday;
+  final DateFormat formattedMonth;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: (MediaQuery.of(context).orientation == Orientation.portrait)
+          ? MediaQuery.of(context).size.height / 8
+          : MediaQuery.of(context).size.height / 4,
+      width: double.infinity,
+      child: SizedBox.shrink(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: brightness == Brightness.light
+                ? ToDoColors.blueLight
+                : ToDoColors.blueDark,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: WidgetsSettings.wideAppBarMediumPadding,
+              vertical: WidgetsSettings.wideAppBarSmallPadding,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${_focusedDay.year}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: ToDoColors.whiteLight),
+                ),
+                Text(
+                  '${formattedWeekday.format(_focusedDay)}, ${formattedMonth.format(_focusedDay)} ${_focusedDay.day} ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1!
+                      .copyWith(color: ToDoColors.whiteLight),
+                ),
+              ],
+            ),
           ),
         ),
       ),

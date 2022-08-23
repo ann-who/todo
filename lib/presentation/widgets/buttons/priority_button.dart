@@ -65,11 +65,11 @@ class AppPriorityPopupButton extends StatelessWidget {
             .add(TaskImportanceChanged(stringToImportance[importance]!));
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          WidgetsSettings.smallScreenPadding,
-          WidgetsSettings.noPadding,
-          WidgetsSettings.smallScreenPadding,
-          WidgetsSettings.smallScreenPadding,
+        padding: const EdgeInsets.only(
+          left: WidgetsSettings.smallScreenPadding,
+          top: WidgetsSettings.noPadding,
+          right: WidgetsSettings.smallScreenPadding,
+          bottom: WidgetsSettings.smallScreenPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

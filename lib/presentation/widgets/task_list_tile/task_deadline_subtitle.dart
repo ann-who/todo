@@ -12,9 +12,10 @@ class TaskDeadlineSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO get system locale
-    final DateFormat formatter = DateFormat.yMMMMd('ru');
-    return Container(
+    final DateFormat formatter =
+        DateFormat.yMMMMd(Localizations.localeOf(context).languageCode);
+
+    return SizedBox.shrink(
       child: deadline == -1
           ? null
           : Text(

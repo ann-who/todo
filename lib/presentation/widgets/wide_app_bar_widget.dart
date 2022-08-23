@@ -196,11 +196,9 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
                   builder: (context, state) {
                     return AppIconButton(
-                      onPressed: () {
-                        context
-                            .read<TasksMainScreenBloc>()
-                            .add(const DoneTasksVisibilityToggled());
-                      },
+                      onPressed: () => context
+                          .read<TasksMainScreenBloc>()
+                          .add(const DoneTasksVisibilityToggled()),
                       iconPath: state.isDoneTasksVisible
                           ? Icons.visibility
                           : Icons.visibility_off,

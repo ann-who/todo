@@ -23,13 +23,13 @@ class TaskPriorityIcon extends StatelessWidget {
         ? ToDoColors.grayLight
         : ToDoColors.grayDark;
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.only(
         top: WidgetsSettings.listTileSmallestPadding,
         right: WidgetsSettings.listTileSmallestPadding,
       ),
       child: importance == Importance.basic
-          ? Container()
+          ? const SizedBox.shrink()
           : AppIcon(
               path: importance == Importance.important
                   ? IconResources.priorityHigh
