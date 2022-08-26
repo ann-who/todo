@@ -15,10 +15,14 @@ part 'main_screen_state.dart';
 class TasksMainScreenBloc
     extends Bloc<TasksMainScreenEvent, TasksMainScreenState> {
   final TaskRepository _taskRepository;
+  final bool _isTesting;
+  int _testingLastId = 0;
 
   TasksMainScreenBloc({
     required TaskRepository taskRepository,
+    bool isTesting = false,
   })  : _taskRepository = taskRepository,
+        _isTesting = isTesting,
         super(
           const TasksMainScreenState(
             tasksList: [],
@@ -57,9 +61,15 @@ class TasksMainScreenBloc
     emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
     try {
       var updatedTaskList = List<Task>.from(state.tasksList);
-      updatedTaskList.removeWhere(
-        (element) => element.id == event.task.id,
-      );
+
+      int elementIndex =
+          updatedTaskList.indexWhere((element) => element.id == event.task.id);
+      if (elementIndex == -1) {
+        // TODO
+        throw Exception();
+      }
+
+      updatedTaskList.removeAt(elementIndex);
 
       emit(state.copyWith(tasksList: updatedTaskList));
 
@@ -85,27 +95,28 @@ class TasksMainScreenBloc
     Emitter<TasksMainScreenState> emit,
   ) async {
     emit(state.copyWith(status: TasksMainScreenStatus.onDataChanges));
+
     try {
       var updatedTaskList = List<Task>.from(state.tasksList);
       int elementIndex =
           updatedTaskList.indexWhere((element) => element.id == event.task.id);
       if (elementIndex == -1) {
-        emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
-        return;
+        // TODO
+        throw Exception();
       }
 
       var element = updatedTaskList[elementIndex];
-      var newElement = element.copyWith(
+      var updatedElement = element.copyWith(
         done: !element.done,
         changedAt: DateTime.now().millisecondsSinceEpoch,
         lastUpdatedBy: await _getDeviceId(),
       );
-      updatedTaskList[elementIndex] = newElement;
+      updatedTaskList[elementIndex] = updatedElement;
 
       emit(state.copyWith(tasksList: updatedTaskList));
 
-      await _taskRepository
-          .updateTask(event.task.copyWith(done: !event.task.done));
+      await _taskRepository.updateTask(updatedElement);
+
       emit(state.copyWith(status: TasksMainScreenStatus.ordinary));
 
       if (_taskRepository.needRefresh) {
@@ -138,6 +149,10 @@ class TasksMainScreenBloc
       var newTask = Task.minimal(state.newTaskText).copyWith(
         lastUpdatedBy: await _getDeviceId(),
       );
+      if (_isTesting) {
+        newTask = newTask.copyWith(id: _testingLastId.toString());
+        ++_testingLastId;
+      }
       updatedTaskList.add(newTask);
 
       emit(state.copyWith(tasksList: updatedTaskList));
