@@ -16,6 +16,9 @@
     "exit": "Exit",
     "alertSaveTask": "Save the task?",
     "alreadyDeletedError": "The task has been already deleted",
-    "errorOccured": "An error occured. Try one more time.",
-    "noData": "You don't have any task yet"
+    "errorOccured": "An error occured. Try one more time",
+    "noData": "You don't have any task yet",
+    "onCreateError": "There is an error on creating. Try one more time",
+    "onEditError": "There is an error on editing. Try one more time",
+    "onDeleteError": "There is an error on deleting. Try one more time"
 }

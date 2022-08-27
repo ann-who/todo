@@ -1,20 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_app/app_theme/app_colors.dart';
+import 'package:todo_app/business_logic/main_screen/bloc_for_main_screen.dart';
+import 'package:todo_app/presentation/widgets/buttons/app_icon_button.dart';
 import 'package:todo_app/resources/app_constants.dart';
-import 'package:todo_app/widgets/app_button.dart';
 
 class WideAppBarWidget extends StatelessWidget {
-  final ValueNotifier<int> completedCounter;
-  final ValueNotifier<bool> onlyUndoneVisible;
-
   const WideAppBarWidget({
     Key? key,
-    required this.completedCounter,
-    required this.onlyUndoneVisible,
   }) : super(key: key);
 
   @override
@@ -24,8 +21,6 @@ class WideAppBarWidget extends StatelessWidget {
       delegate: MyHeaderDelegate(
         appBarExpandedHeight: MediaQuery.of(context).size.height / 4,
         statusBarHeight: MediaQuery.of(context).viewPadding.top,
-        completedCounter: completedCounter,
-        onlyUndoneVisible: onlyUndoneVisible,
       ),
     );
   }
@@ -34,14 +29,10 @@ class WideAppBarWidget extends StatelessWidget {
 class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double appBarExpandedHeight;
   final double statusBarHeight;
-  final ValueNotifier<int> completedCounter;
-  final ValueNotifier<bool> onlyUndoneVisible;
 
   const MyHeaderDelegate({
     required this.appBarExpandedHeight,
     required this.statusBarHeight,
-    required this.completedCounter,
-    required this.onlyUndoneVisible,
   });
 
   @override
@@ -51,7 +42,6 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     final progress = shrinkOffset / maxExtent;
-    const int animationDuration = 100;
     Brightness brightness = Theme.of(context).brightness;
 
     return Material(
@@ -67,13 +57,15 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                     ToDoColors.backSecondaryDark,
                     progress,
                   ),
-            duration: const Duration(milliseconds: animationDuration),
+            duration: const Duration(
+              milliseconds: WidgetsSettings.animationDuration,
+            ),
           ),
 
           // Animated title and subtitle
           AnimatedContainer(
             duration: const Duration(
-              milliseconds: animationDuration,
+              milliseconds: WidgetsSettings.animationDuration,
             ),
             padding: EdgeInsets.lerp(
               const EdgeInsets.only(
@@ -107,13 +99,12 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 AnimatedOpacity(
                   opacity: 1 - progress,
                   duration: const Duration(
-                    milliseconds: animationDuration,
+                    milliseconds: WidgetsSettings.animationDuration,
                   ),
-                  child: AnimatedBuilder(
-                    animation: completedCounter,
-                    builder: (BuildContext context, Widget? child) {
+                  child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
+                    builder: (context, state) {
                       return Text(
-                        '${AppLocalizations.of(context)!.done} — ${completedCounter.value}',
+                        '${AppLocalizations.of(context)!.done} — ${state.doneTasksCount}',
                         style: Theme.of(context).textTheme.subtitle1,
                       );
                     },
@@ -124,14 +115,11 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
 
           // Animated divider
-          AnimatedContainer(
-            duration: const Duration(
-              milliseconds: animationDuration,
-            ),
+          Container(
             alignment: Alignment.bottomCenter,
             child: AnimatedOpacity(
               duration: const Duration(
-                milliseconds: animationDuration,
+                milliseconds: WidgetsSettings.animationDuration,
               ),
               opacity: progress / 4,
               child: Container(
@@ -170,7 +158,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
             right: 0,
             child: AnimatedContainer(
               duration: const Duration(
-                milliseconds: animationDuration,
+                milliseconds: WidgetsSettings.animationDuration,
               ),
               padding: EdgeInsets.lerp(
                 const EdgeInsets.only(
@@ -188,18 +176,22 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Alignment.centerRight,
                 progress,
               ),
-              child: AnimatedBuilder(
-                animation: onlyUndoneVisible,
-                builder: (BuildContext context, Widget? child) {
-                  return AppIconButton(
-                    onPressed: () {
-                      onlyUndoneVisible.value = !onlyUndoneVisible.value;
-                    },
-                    iconPath: onlyUndoneVisible.value
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  );
-                },
+              child: AnimatedContainer(
+                duration: const Duration(
+                  milliseconds: WidgetsSettings.animationDuration,
+                ),
+                child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
+                  builder: (context, state) {
+                    return AppIconButton(
+                      onPressed: () => context
+                          .read<TasksMainScreenBloc>()
+                          .add(const DoneTasksVisibilityToggled()),
+                      iconPath: state.isDoneTasksVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    );
+                  },
+                ),
               ),
             ),
           ),

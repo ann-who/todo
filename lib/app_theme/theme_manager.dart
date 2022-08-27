@@ -90,6 +90,10 @@ class ThemeManager {
       );
     } else {
       themeData = ThemeData(
+        colorScheme: const ColorScheme.dark(
+          primary: ToDoColors.blueDark,
+          secondary: ToDoColors.blueDark,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: ToDoColors.backPrimaryDark,
           iconTheme: IconThemeData(

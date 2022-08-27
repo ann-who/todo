@@ -1,37 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:todo_app/app_theme/theme_manager.dart';
-import 'package:todo_app/screens/main_screen.dart';
+import 'package:todo_app/data/repository/remote_task_repository.dart';
+import 'package:todo_app/data/repository/task_repository.dart';
+import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/presentation/pages/main_screen.dart';
+import 'package:todo_app/presentation/pages/task_detailed_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MyApp(
+      taskRepository: RemoteTaskRepository(),
+    ),
+  );
 }
 
 var logger = Logger();
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({
+    Key? key,
+    required TaskRepository taskRepository,
+  })  : _taskRepository = taskRepository,
+        super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+  final TaskRepository _taskRepository;
 
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      routes: {
-        '/main': (context) => const MainScreen(),
-        // '/detailed': (context) => const TaskDetailedScreen(),
-      },
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeManager.theme(Brightness.light),
-      darkTheme: ThemeManager.theme(Brightness.dark),
-      home: const MainScreen(),
+    return RepositoryProvider.value(
+      value: _taskRepository,
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const MainScreen(),
+        onGenerateRoute: (settings) {
+          if (settings.name == TaskDetailedScreen.routeName) {
+            final task = settings.arguments as Task?;
+            return MaterialPageRoute(
+              builder: (context) {
+                return TaskDetailedScreen(
+                  initialTask: task,
+                );
+              },
+            );
+          }
+          assert(false, 'Need to implement ${settings.name}');
+          return null;
+        },
+        debugShowCheckedModeBanner: false,
+        theme: ThemeManager.theme(Brightness.light),
+        darkTheme: ThemeManager.theme(Brightness.dark),
+      ),
     );
   }
 }
