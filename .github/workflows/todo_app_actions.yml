@@ -21,9 +21,22 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --split-per-abi
+        run: flutter build apk --split-per-abi lib/main_prod.dart --flavor prod
 
-      - name: Upload debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-            path: build/app/outputs/apk/dev/debug/app_dev_debug.apk
+            name: todo-arm64-v8a.apk
+            path: build/app/outputs/apk/prod/release/app-prod-arm64-v8a-release.apk
+            
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+            name: todo-armeabi-v7a.apk
+            path: build/app/outputs/apk/prod/release/app-prod-armeabi-v7a-release.apk
+            
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+            name: todo-x86_64.apk
+            path: build/app/outputs/apk/prod/release/app-prod-x86_64-release.apk
