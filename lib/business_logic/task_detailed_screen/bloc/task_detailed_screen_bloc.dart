@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_id/android_id.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -96,6 +100,8 @@ class TaskDetailedScreenBloc
             text: state.taskText,
             importance: state.importance,
             deadline: state.deadline,
+          ).copyWith(
+            lastUpdatedBy: await _getDeviceId(),
           ),
         );
       } else {
@@ -104,6 +110,8 @@ class TaskDetailedScreenBloc
             text: state.taskText,
             importance: state.importance,
             deadline: state.deadline,
+            lastUpdatedBy: await _getDeviceId(),
+            changedAt: DateTime.now().millisecondsSinceEpoch,
           ),
         );
       }
@@ -117,5 +125,23 @@ class TaskDetailedScreenBloc
         ),
       );
     }
+  }
+
+  Future<String> _getDeviceId() async {
+    String deviceId = 'unknown-device';
+
+    try {
+      if (Platform.isIOS) {
+        final deviceInfo = DeviceInfoPlugin();
+        var iosDeviceInfo = await deviceInfo.iosInfo;
+        deviceId = iosDeviceInfo.identifierForVendor!;
+      } else if (Platform.isAndroid) {
+        deviceId = (await const AndroidId().getId())!;
+      }
+    } catch (e) {
+      // TODO log
+    }
+
+    return deviceId;
   }
 }

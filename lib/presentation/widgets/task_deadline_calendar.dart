@@ -135,8 +135,7 @@ class CalendarButtons extends StatelessWidget {
         ),
         AppTextButton(
           onPressed: () => _selectedDay != null
-              ? Navigator.of(context)
-                  .pop(_selectedDay!.millisecondsSinceEpoch ~/ 1000)
+              ? Navigator.of(context).pop(_selectedDay!.millisecondsSinceEpoch)
               : Navigator.of(context).pop(),
           value: AppLocalizations.of(context)!.ok,
         ),

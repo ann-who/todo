@@ -15,12 +15,12 @@ class TaskDeadlineSubtitle extends StatelessWidget {
     final DateFormat formatter =
         DateFormat.yMMMMd(Localizations.localeOf(context).languageCode);
 
-    return SizedBox.shrink(
+    return SizedBox.fromSize(
       child: deadline == -1
           ? null
           : Text(
               formatter.format(
-                DateTime.fromMillisecondsSinceEpoch(deadline * 1000),
+                DateTime.fromMillisecondsSinceEpoch(deadline),
               ),
               style: Theme.of(context).textTheme.caption,
             ),

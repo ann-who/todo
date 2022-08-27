@@ -53,7 +53,8 @@ class WidgetsSettings {
   }
 
   // Settings for data source
-  static const String baseUrl = 'https://beta.mrdekk.ru/todobackend';
+  static const String domainUrl = 'beta.mrdekk.ru';
+  static const String baseUrl = 'https://$domainUrl/todobackend';
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 3000;
   static const String myToken = 'Olnnard';
