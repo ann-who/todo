@@ -24,7 +24,6 @@ class NewTaskFromListTextField extends StatelessWidget {
                 hintText: AppLocalizations.of(context)!.newToDo,
               ),
               style: Theme.of(context).textTheme.bodyText1,
-              maxLines: null,
               textInputAction: TextInputAction.done,
               enabled: !state.status.isBusy,
               onChanged: (taskText) => context

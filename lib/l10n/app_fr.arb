@@ -16,6 +16,9 @@
     "exit": "Partir",
     "alertSaveTask": "Sauve la tâche?",
     "alreadyDeletedError": "La taĉhe était déjà supprimée",
-    "errorOccured": "Il y a une erreur. Essayez encore une fois.",
-    "noData": "Vous n'avez pas ajouté des tâches"
+    "errorOccured": "Il y a une erreur. Essayez encore une fois",
+    "noData": "Vous n'avez pas ajouté des tâches",
+    "onCreateError": "Il y a une erreur en création. Essayez encore une fois",
+    "onEditError": "Il y a une erreur en rédaction. Essayez encore une fois",
+    "onDeleteError": "Il y a une erreur en supprimation. Essayez encore une fois"
 }

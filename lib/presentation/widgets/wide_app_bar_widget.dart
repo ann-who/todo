@@ -101,23 +101,13 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   duration: const Duration(
                     milliseconds: WidgetsSettings.animationDuration,
                   ),
-                  child: AnimatedContainer(
-                    duration: const Duration(
-                      milliseconds: WidgetsSettings.animationDuration,
-                    ),
-                    // animation: ,
-                    // builder: (BuildContext context, Widget? child) {
-                    // return
-                    child:
-                        BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
-                      builder: (context, state) {
-                        return Text(
-                          '${AppLocalizations.of(context)!.done} — ${state.doneTasksCount}',
-                          style: Theme.of(context).textTheme.subtitle1,
-                        );
-                      },
-                    ),
-                    // },
+                  child: BlocBuilder<TasksMainScreenBloc, TasksMainScreenState>(
+                    builder: (context, state) {
+                      return Text(
+                        '${AppLocalizations.of(context)!.done} — ${state.doneTasksCount}',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -125,10 +115,7 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
 
           // Animated divider
-          AnimatedContainer(
-            duration: const Duration(
-              milliseconds: WidgetsSettings.animationDuration,
-            ),
+          Container(
             alignment: Alignment.bottomCenter,
             child: AnimatedOpacity(
               duration: const Duration(

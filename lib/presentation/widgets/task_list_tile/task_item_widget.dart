@@ -44,31 +44,26 @@ class TaskItemWidget extends StatelessWidget {
               },
             ),
             Expanded(
-              child: Transform.translate(
-                offset: const Offset(
-                  WidgetsSettings.listTileSmallPadding,
-                  WidgetsSettings.noPadding,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: WidgetsSettings.listTileSmallPadding,
+                  left: WidgetsSettings.listTileSmallPadding,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: WidgetsSettings.listTileSmallPadding,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TaskPriorityIcon(importance: task.importance),
-                          TaskTitleText(
-                            text: task.text,
-                            isChecked: task.done,
-                          ),
-                        ],
-                      ),
-                      TaskDeadlineSubtitle(deadline: task.deadline),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TaskPriorityIcon(importance: task.importance),
+                        TaskTitleText(
+                          text: task.text,
+                          isChecked: task.done,
+                        ),
+                      ],
+                    ),
+                    TaskDeadlineSubtitle(deadline: task.deadline),
+                  ],
                 ),
               ),
             ),

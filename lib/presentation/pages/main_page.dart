@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:todo_app/business_logic/main_screen/bloc_for_main_screen.dart';
-import 'package:todo_app/presentation/pages/task_detailed_screen.dart';
 import 'package:todo_app/presentation/widgets/tasks_list/tasks_list_widget.dart';
 import 'package:todo_app/presentation/widgets/wide_app_bar_widget.dart';
 
@@ -36,23 +36,19 @@ class MainPage extends StatelessWidget {
           await showDialog(
             context: context,
             builder: ((context) {
-              String errorMessage;
+              String errorMessage = AppLocalizations.of(context)!.errorOccured;
+
               switch (state.errorStatus) {
-                case TasksMainScreenError.none:
-                  errorMessage = 'Нет ошибочки...';
-                  break;
                 case TasksMainScreenError.onCreateError:
-                  errorMessage = 'Ошибочка при создании...';
+                  errorMessage = AppLocalizations.of(context)!.onCreateError;
                   break;
                 case TasksMainScreenError.onDeleteError:
-                  errorMessage = 'Ошибочка при удалении...';
+                  errorMessage = AppLocalizations.of(context)!.onDeleteError;
                   break;
                 case TasksMainScreenError.onUpdateError:
-                  errorMessage = 'Ошибочка при изменении...';
+                  errorMessage = AppLocalizations.of(context)!.onEditError;
                   break;
-                case TasksMainScreenError.onRefreshError:
-                  errorMessage = 'Ошибочка при обновлении...';
-                  break;
+                default:
               }
 
               return AlertDialog(
