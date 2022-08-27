@@ -9,16 +9,13 @@ class Config {
   static late Flavor appFlavor;
 
   static Widget get flavorBanner {
-    switch (appFlavor) {
-      case Flavor.prod:
-        return Container();
-      case Flavor.dev:
-        return const Banner(
-          message: 'dev',
-          location: BannerLocation.topEnd,
-        );
-      default:
-        return Container();
+    if (appFlavor == Flavor.dev) {
+      return const Banner(
+        message: 'dev',
+        location: BannerLocation.topEnd,
+      );
     }
+
+    return const SizedBox.shrink();
   }
 }
