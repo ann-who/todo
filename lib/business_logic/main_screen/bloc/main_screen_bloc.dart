@@ -111,6 +111,11 @@ class TasksMainScreenBloc
         changedAt: DateTime.now().millisecondsSinceEpoch,
         lastUpdatedBy: await _getDeviceId(),
       );
+
+      if (_isTesting) {
+        updatedElement = updatedElement.copyWith(changedAt: -1);
+      }
+
       updatedTaskList[elementIndex] = updatedElement;
 
       emit(state.copyWith(tasksList: updatedTaskList));
@@ -150,7 +155,11 @@ class TasksMainScreenBloc
         lastUpdatedBy: await _getDeviceId(),
       );
       if (_isTesting) {
-        newTask = newTask.copyWith(id: _testingLastId.toString());
+        newTask = newTask.copyWith(
+          id: _testingLastId.toString(),
+          changedAt: -1,
+          createdAt: -1,
+        );
         ++_testingLastId;
       }
       updatedTaskList.add(newTask);

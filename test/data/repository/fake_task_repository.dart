@@ -5,7 +5,7 @@ class FakeTaskRepository implements TaskRepository {
   List<Task> _fakeDatabase = [];
 
   @override
-  bool needRefresh() => false;
+  bool get needRefresh => false;
 
   @override
   Future<void> createTask(Task task) async => _fakeDatabase.add(task);
@@ -29,5 +29,8 @@ class FakeTaskRepository implements TaskRepository {
   Future<List<Task>> getTasksList() async => _fakeDatabase;
 
   @override
-  Future<void> updateTasksList(List<Task> tasks) async => _fakeDatabase = tasks;
+  Future<List<Task>> updateTasksList(List<Task> tasks) async {
+    _fakeDatabase = tasks;
+    return _fakeDatabase;
+  }
 }

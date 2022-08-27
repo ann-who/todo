@@ -54,13 +54,15 @@ void main() {
         act: (bloc) => bloc
           ..add(const TaskTextChanged('test task'))
           ..add(const TaskSubmitted()),
+        skip: 1,
         expect: () {
-          var newTask = Task.minimal('test task').copyWith(id: '0');
+          var newTask = Task.minimal('test task').copyWith(
+            id: '0',
+            createdAt: -1,
+            changedAt: -1,
+          );
+
           return <TasksMainScreenState>[
-            const TasksMainScreenState(
-              status: TasksMainScreenStatus.ordinary,
-              newTaskText: 'test task',
-            ),
             const TasksMainScreenState(
               status: TasksMainScreenStatus.onDataChanges,
               newTaskText: 'test task',
@@ -82,16 +84,22 @@ void main() {
       blocTest<TasksMainScreenBloc, TasksMainScreenState>(
         'Delete task',
         build: () => tasksMainScreenBloc,
-        seed: () => TasksMainScreenState(
-          status: TasksMainScreenStatus.ordinary,
-          tasksList: <Task>[Task.minimal('test task').copyWith(id: '0')],
-        ),
-        act: (bloc) => bloc
-          ..add(
+        act: (bloc) async {
+          bloc.add(const TaskTextChanged('test task'));
+          bloc.add(const TaskSubmitted());
+          await Future.delayed(const Duration(milliseconds: 100));
+          bloc.add(
             TaskFromListDeleted(Task.minimal('test task').copyWith(id: '0')),
-          ),
+          );
+        },
+        skip: 4,
         expect: () {
-          var newTask = Task.minimal('test task').copyWith(id: '0');
+          var newTask = Task.minimal('test task').copyWith(
+            id: '0',
+            createdAt: -1,
+            changedAt: -1,
+          );
+
           return <TasksMainScreenState>[
             TasksMainScreenState(
               status: TasksMainScreenStatus.onDataChanges,
@@ -130,16 +138,22 @@ void main() {
       blocTest<TasksMainScreenBloc, TasksMainScreenState>(
         'Toggle task',
         build: () => tasksMainScreenBloc,
-        seed: () => TasksMainScreenState(
-          status: TasksMainScreenStatus.ordinary,
-          tasksList: <Task>[Task.minimal('test task').copyWith(id: '0')],
-        ),
-        act: (bloc) => bloc
-          ..add(
+        act: (bloc) async {
+          bloc.add(const TaskTextChanged('test task'));
+          bloc.add(const TaskSubmitted());
+          await Future.delayed(const Duration(milliseconds: 100));
+          bloc.add(
             TaskCompletionToggled(Task.minimal('test task').copyWith(id: '0')),
-          ),
+          );
+        },
+        skip: 4,
         expect: () {
-          var newTask = Task.minimal('test task').copyWith(id: '0');
+          var newTask = Task.minimal('test task').copyWith(
+            id: '0',
+            createdAt: -1,
+            changedAt: -1,
+          );
+
           return <TasksMainScreenState>[
             TasksMainScreenState(
               status: TasksMainScreenStatus.onDataChanges,
