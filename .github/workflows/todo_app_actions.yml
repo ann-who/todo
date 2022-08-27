@@ -13,6 +13,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          
+      - name: Check version
         run: flutter --version
 
       - name: Install dependencies
@@ -23,5 +25,5 @@ jobs:
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v3
-          with:
+        with:
             path: build/app/outputs/apk/dev/debug/app_dev_debug.apk
