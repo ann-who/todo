@@ -72,7 +72,7 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.all(WidgetsSettings.bigScreenPadding),
+      padding: EdgeInsets.symmetric(vertical: WidgetsSettings.bigScreenPadding),
       child: Center(
         child: CircularProgressIndicator(),
       ),
@@ -86,7 +86,8 @@ class ErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(WidgetsSettings.bigScreenPadding),
+      padding: const EdgeInsets.symmetric(
+          vertical: WidgetsSettings.bigScreenPadding),
       child: Center(
         child: Text(
           AppLocalizations.of(context)!.errorOccured,
