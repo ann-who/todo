@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+// как понимаю, эта ошидка для statefull и ложно срабатывает
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,15 +33,14 @@ class TaskDetailedPage extends StatelessWidget {
           await showDialog(
             context: context,
             builder: ((context) {
-              // TODO handle errors
               String errorMessage;
               if (state.errorStatus == TaskDetailedScreenError.onCreateError) {
-                errorMessage = 'Ошибочка...';
+                errorMessage = AppLocalizations.of(context)!.onCreateError;
               } else if (state.errorStatus ==
                   TaskDetailedScreenError.onDeleteError) {
-                errorMessage = 'Ошибочка...';
+                errorMessage = AppLocalizations.of(context)!.onDeleteError;
               } else {
-                errorMessage = 'Странная ошибочка...';
+                errorMessage = AppLocalizations.of(context)!.errorOccured;
               }
               return AlertDialog(
                 content: Text(errorMessage),
@@ -70,7 +72,6 @@ class TaskDetailedPage extends StatelessWidget {
               iconPath: Icons.close,
               color: Theme.of(context).appBarTheme.iconTheme!.color,
               onPressed: () async {
-                // TODO incapsulate navigation phase 2
                 if (!state.isChanged) {
                   Navigator.of(context).pop();
                   return;

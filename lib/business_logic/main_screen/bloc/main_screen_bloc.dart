@@ -8,6 +8,8 @@ import 'package:android_id/android_id.dart';
 
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/resources/app_constants.dart';
+import 'package:todo_app/todo_app.dart';
 
 part 'main_screen_event.dart';
 part 'main_screen_state.dart';
@@ -65,8 +67,7 @@ class TasksMainScreenBloc
       int elementIndex =
           updatedTaskList.indexWhere((element) => element.id == event.task.id);
       if (elementIndex == -1) {
-        // TODO
-        throw Exception();
+        throw Exception(WidgetsSettings.notFound);
       }
 
       updatedTaskList.removeAt(elementIndex);
@@ -80,7 +81,6 @@ class TasksMainScreenBloc
         add(const TasksListRefreshed());
       }
     } catch (e) {
-      // TODO откат
       emit(
         state.copyWith(
           status: TasksMainScreenStatus.failure,
@@ -101,8 +101,7 @@ class TasksMainScreenBloc
       int elementIndex =
           updatedTaskList.indexWhere((element) => element.id == event.task.id);
       if (elementIndex == -1) {
-        // TODO
-        throw Exception();
+        throw Exception(WidgetsSettings.notFound);
       }
 
       var element = updatedTaskList[elementIndex];
@@ -265,7 +264,7 @@ class TasksMainScreenBloc
         deviceId = (await const AndroidId().getId())!;
       }
     } catch (e) {
-      // TODO log
+      logger.e(WidgetsSettings.deviceId);
     }
 
     return deviceId;

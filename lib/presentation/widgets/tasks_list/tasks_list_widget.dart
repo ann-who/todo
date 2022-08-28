@@ -31,7 +31,6 @@ class TasksListWidget extends StatelessWidget {
                   if (state.status == TasksMainScreenStatus.loading) {
                     return const LoadingWidget();
                   } else if (state.status == TasksMainScreenStatus.failure) {
-                    // TODO текст, что надо обновить
                     return const ErrorWidget();
                   }
 

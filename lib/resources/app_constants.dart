@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WidgetsSettings {
-  // Settings for general widgets
+  /// Settings for general widgets
+
   static const double noPadding = 0.0;
   static const double smallestScreenPadding = 8.0;
   static const double smallScreenPadding = 16.0;
@@ -53,10 +54,19 @@ class WidgetsSettings {
     );
   }
 
-  // Settings for data source
+  /// Settings for data source
+
   static const String domainUrl = 'beta.mrdekk.ru';
   static const String baseUrl = 'https://$domainUrl/todobackend';
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 3000;
   static const String myToken = 'Olnnard';
+
+  /// Const messages
+
+  static const String dsError = 'Error occured on data source. Try later';
+  static const String revisionError =
+      'Revision error occured. Try one more time';
+  static const String notFound = 'Task is not found';
+  static const String deviceId = 'Can\'t get device id';
 }
