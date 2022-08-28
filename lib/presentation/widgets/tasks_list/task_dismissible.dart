@@ -35,9 +35,6 @@ class DismissibleTask extends StatelessWidget {
             context.read<TasksMainScreenBloc>().add(TaskFromListDeleted(task));
             needDelete = true;
           }
-
-          // TODO придумать что-то, чтобы иконка менялась только после окончания анимации
-
           return needDelete;
         },
         background: DoneBackground(

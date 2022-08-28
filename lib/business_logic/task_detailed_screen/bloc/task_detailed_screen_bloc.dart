@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/resources/app_constants.dart';
+import 'package:todo_app/todo_app.dart';
 
 part 'task_detailed_screen_event.dart';
 part 'task_detailed_screen_state.dart';
@@ -139,7 +141,7 @@ class TaskDetailedScreenBloc
         deviceId = (await const AndroidId().getId())!;
       }
     } catch (e) {
-      // TODO log
+      logger.e(WidgetsSettings.deviceId);
     }
 
     return deviceId;

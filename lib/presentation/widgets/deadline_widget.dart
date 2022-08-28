@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
-
 import 'package:todo_app/business_logic/task_detailed_screen/bloc_for_task_detailed_screen.dart';
-import 'package:todo_app/data/repository/task_repository.dart';
 import 'package:todo_app/presentation/widgets/task_deadline_calendar.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
@@ -20,8 +17,8 @@ class DeadlineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Brightness? brightness = MediaQuery.of(context).platformBrightness;
-    // TODO get system locale
-    final DateFormat formatter = DateFormat.yMMMMd('ru');
+    final DateFormat formatter =
+        DateFormat.yMMMMd(Localizations.localeOf(context).languageCode);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -51,7 +48,9 @@ class DeadlineWidget extends StatelessWidget {
                   value: context.read<TaskDetailedScreenBloc>(),
                   child: AlertDialog(
                     content: SizedBox(
-                      height: MediaQuery.of(dialogContext).size.height / 1.4,
+                      height: MediaQuery.of(context).size.height <= 800
+                          ? MediaQuery.of(dialogContext).size.height / 1.4
+                          : MediaQuery.of(dialogContext).size.height / 2.0,
                       width: MediaQuery.of(dialogContext).size.width -
                           WidgetsSettings.smallScreenPadding,
                       child: const TaskDeadlineCalendar(),

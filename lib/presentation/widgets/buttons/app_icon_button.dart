@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:todo_app/app_theme/app_colors.dart';
+import 'package:todo_app/resources/app_constants.dart';
 
 class AppIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -18,15 +19,13 @@ class AppIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Brightness? brightness = MediaQuery.of(context).platformBrightness;
 
-    // TODO fit in listtile
     return InkWell(
-      // child: GestureDetector(
-      // padding: EdgeInsets.zero,
-      // radius: WidgetsSettings.buttonSplashRadius,
-      // borderRadius: WidgetsSettings.roundedRectangleBorder(8),
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(WidgetsSettings.iconBorderRadius),
+      ),
       onTap: onPressed,
       child: Padding(
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsets.all(WidgetsSettings.listTileSmallPadding),
         child: Icon(
           iconPath,
           color: color ??
@@ -35,7 +34,6 @@ class AppIconButton extends StatelessWidget {
                   : ToDoColors.blueDark),
         ),
       ),
-      // ),
     );
   }
 }

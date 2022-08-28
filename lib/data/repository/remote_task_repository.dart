@@ -6,11 +6,6 @@ import 'package:todo_app/todo_app.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
-//! TODO обработка ошибок
-// Отсутствие интернета
-// Отсутствие токена
-// Прочие ошибки
-
 class RemoteTaskRepository implements TaskRepository {
   bool _needRefresh = false;
   TaskDataSource? _taskDataSource;
@@ -36,7 +31,7 @@ class RemoteTaskRepository implements TaskRepository {
     await _initRevisionIfNotInit();
   }
 
-  // Обработчики ошибок ревизии
+  /// Обработчики ошибок ревизии
 
   Future<void> onCreateTaskRevisionResolver(Task task) async {
     await getTasksList();
@@ -59,7 +54,7 @@ class RemoteTaskRepository implements TaskRepository {
     await getTasksList();
   }
 
-  // Переопределение базового класса
+  /// Переопределение базового класса
 
   @override
   bool get needRefresh => _needRefresh;
@@ -74,7 +69,7 @@ class RemoteTaskRepository implements TaskRepository {
       var result = await _taskDataSource!.createTask(lastRevision, task);
       resultRevision = result.revision;
     } on RevisionException {
-      logger.e('Revision error');
+      logger.e(WidgetsSettings.revisionError);
       await onCreateTaskRevisionResolver(task);
       _needRefresh = true;
     } on TaskDSException catch (e) {
@@ -93,7 +88,7 @@ class RemoteTaskRepository implements TaskRepository {
     try {
       result = await _taskDataSource!.getTask(uuid);
     } on NotFoundException {
-      logger.e('Задача $uuid не найдена');
+      logger.e('$uuid ${WidgetsSettings.notFound}');
       rethrow;
     } on TaskDSException catch (e) {
       logger.e(e.message);
@@ -114,10 +109,10 @@ class RemoteTaskRepository implements TaskRepository {
       var result = await _taskDataSource!.updateTask(lastRevision, task);
       resultRevision = result.revision;
     } on NotFoundException {
-      logger.e('Задача ${task.id} не найдена');
+      logger.e('${task.id} ${WidgetsSettings.notFound}');
       rethrow;
     } on RevisionException {
-      logger.e('Ошибка ревизии');
+      logger.e(WidgetsSettings.revisionError);
       await onUpdateTaskRevisionResolver(task);
       _needRefresh = true;
     } on TaskDSException catch (e) {
@@ -138,10 +133,10 @@ class RemoteTaskRepository implements TaskRepository {
       var result = await _taskDataSource!.deleteTask(lastRevision, uuid);
       resultRevision = result.revision;
     } on NotFoundException {
-      logger.e('Задача $uuid не найдена');
+      logger.e('$uuid ${WidgetsSettings.notFound}');
       rethrow;
     } on RevisionException {
-      logger.e('Ошибка ревизии');
+      logger.e(WidgetsSettings.revisionError);
       await onDeleteTaskRevisionResolver(uuid);
       _needRefresh = true;
     } on TaskDSException catch (e) {

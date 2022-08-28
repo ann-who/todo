@@ -16,7 +16,7 @@ enum TasksMainScreenStatus {
   /// Обновление списка задач
   loading,
 
-  /// Ошибка выполненения действия
+  /// Ошибка выполнения действия
   failure;
 
   bool get isBusy => [

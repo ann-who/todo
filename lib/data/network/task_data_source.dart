@@ -6,9 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/resources/app_constants.dart';
 
-//! TODO check internet connection or catch this error
-//! TODO update tasks list
-
 class TaskDataSourceAnswer {
   int revision;
   Object result;
@@ -18,15 +15,17 @@ class TaskDataSourceAnswer {
 
 class TaskDSException implements Exception {
   String message;
-  TaskDSException([this.message = 'Data Source error']);
+  TaskDSException([this.message = WidgetsSettings.dsError]);
 }
 
 class RevisionException extends TaskDSException {
-  RevisionException([String message = 'Revision error']) : super(message);
+  RevisionException([String message = WidgetsSettings.revisionError])
+      : super(message);
 }
 
 class NotFoundException extends TaskDSException {
-  NotFoundException([String message = 'Not found']) : super(message);
+  NotFoundException([String message = WidgetsSettings.notFound])
+      : super(message);
 }
 
 class TaskDataSource {
@@ -63,8 +62,7 @@ class TaskDataSource {
       if (e.response!.statusCode == HttpStatus.badRequest) {
         throw RevisionException();
       } else if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При создании задачи возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
@@ -87,11 +85,9 @@ class TaskDataSource {
       }
 
       if (e.response!.statusCode == HttpStatus.notFound) {
-        throw NotFoundException(
-            'Не удалось получить задачу. Возможно, она была удалена.');
+        throw NotFoundException();
       } else if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При получении задачи возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
@@ -125,11 +121,9 @@ class TaskDataSource {
       if (e.response!.statusCode == HttpStatus.badRequest) {
         throw RevisionException();
       } else if (e.response!.statusCode == HttpStatus.notFound) {
-        throw NotFoundException(
-            'Не удалось изменить задачу. Возможно, она была удалена.');
+        throw NotFoundException();
       } else if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При изменении задачи возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
@@ -161,11 +155,9 @@ class TaskDataSource {
       if (e.response!.statusCode == HttpStatus.badRequest) {
         throw RevisionException();
       } else if (e.response!.statusCode == HttpStatus.notFound) {
-        throw NotFoundException(
-            'Не удалось удалить задачу. Возможно, она уже была удалена.');
+        throw NotFoundException();
       } else if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При удалении задачи возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
@@ -188,8 +180,7 @@ class TaskDataSource {
       }
 
       if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При получении списка задач возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
@@ -226,8 +217,7 @@ class TaskDataSource {
       }
 
       if (e.response!.statusCode != HttpStatus.ok) {
-        throw TaskDSException(
-            "При изменении задачи возникла ошибка. Попробуйте повторить позже.");
+        throw TaskDSException();
       }
 
       rethrow;
