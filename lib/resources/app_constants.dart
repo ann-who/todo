@@ -27,6 +27,7 @@ class WidgetsSettings {
   static const double dividerHeight = 0.5;
 
   static const double iconRadius = 20.0;
+  static const double iconBorderRadius = 30.0;
 
   static const double listTileVerticalPadding = 12.0;
   static const double listTileHorizontalPadding = 16.0;

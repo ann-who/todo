@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo_app/business_logic/main_screen/bloc_for_main_screen.dart';
 import 'package:todo_app/models/task_model.dart';
-import 'package:todo_app/presentation/pages/task_detailed_screen.dart';
 import 'package:todo_app/presentation/widgets/buttons/app_icon_button.dart';
 
 class TaskTrailingIconButton extends StatelessWidget {

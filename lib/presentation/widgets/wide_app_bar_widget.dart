@@ -19,7 +19,9 @@ class WideAppBarWidget extends StatelessWidget {
     return SliverPersistentHeader(
       pinned: true,
       delegate: MyHeaderDelegate(
-        appBarExpandedHeight: MediaQuery.of(context).size.height / 4,
+        appBarExpandedHeight: MediaQuery.of(context).size.height <= 800
+            ? MediaQuery.of(context).size.height / 4
+            : MediaQuery.of(context).size.height / 8,
         statusBarHeight: MediaQuery.of(context).viewPadding.top,
       ),
     );
@@ -149,7 +151,6 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
           // Animated icon button
           Positioned(
-            // TODO calculate position
             bottom: lerpDouble(
               -5,
               12,
