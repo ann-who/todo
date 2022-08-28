@@ -48,7 +48,7 @@ class DeadlineWidget extends StatelessWidget {
                   value: context.read<TaskDetailedScreenBloc>(),
                   child: AlertDialog(
                     content: SizedBox(
-                      height: MediaQuery.of(context).size.height <= 700
+                      height: MediaQuery.of(context).size.height <= 800
                           ? MediaQuery.of(dialogContext).size.height / 1.4
                           : MediaQuery.of(dialogContext).size.height / 2.0,
                       width: MediaQuery.of(dialogContext).size.width -
