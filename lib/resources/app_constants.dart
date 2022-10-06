@@ -60,7 +60,7 @@ class WidgetsSettings {
   static const String baseUrl = 'https://$domainUrl/todobackend';
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 3000;
-  static const String myToken = 'Olnnard';
+  static const String myToken = 'YOUR TOKEN HERE';
 
   /// Const messages
 
